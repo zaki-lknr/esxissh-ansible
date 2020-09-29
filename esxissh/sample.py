@@ -16,4 +16,10 @@ if __name__ == '__main__':
     vmid = esxi.get_vmid("cloud-dev")
     print("vmid: " + vmid)
 
+    r = esxi.get_powerstate("cloud-dev")
+    print("cloud-dev poweron: " + str(r))
+
+    r = esxi.get_powerstate("desktop")
+    print("desktop poweron: " + str(r))
+
     esxi.finalize()

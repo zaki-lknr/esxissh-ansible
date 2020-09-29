@@ -72,3 +72,33 @@ class EsxiSsh:
             vmid
         """
         return self.__vmlist[vmname]["vmid"]
+
+    def get_powerstate(self, vmname):
+        """vmの電源on状態を取得
+
+        Args:
+            vmname: vm名
+
+        Returns:
+            bool: 電源on: True / 電源off: False
+        """
+        vmid = self.get_vmid(vmname)
+        result = None
+
+        stdin, stdout, stderr = self.__client.exec_command("vim-cmd vmsvc/power.getstate " + vmid)
+        for line in stdout:
+            m = re.match(r'^Powered (.+)', line)
+            if m:
+                if m.group(1) == "on":
+                    result = True
+                elif m.group(1) == "off":
+                    result = False
+                else:
+                    raise Exception("unknown state: '" + result.group(1) + "'")
+                    # あれ？この時どうやってclose()するんだ？
+
+        stdin.close()
+        stdout.close()
+        stderr.close()
+
+        return result
