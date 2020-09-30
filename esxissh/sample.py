@@ -22,4 +22,12 @@ if __name__ == '__main__':
     r = esxi.get_powerstate("desktop")
     print("desktop poweron: " + str(r))
 
+    # desktop-centos poweron (TRUE)
+    r = esxi.set_poweron("desktop-centos")
+    print("desktop-centos poweron: " + str(r))
+
+    # cloud-dev poweron (FALSE)
+    r = esxi.set_poweron("cloud-dev")
+    print("cloud-dev poweron: " + str(r))
+
     esxi.finalize()

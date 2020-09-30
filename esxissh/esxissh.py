@@ -105,3 +105,24 @@ class EsxiSsh:
             raise Exception("unknown state: '" + str(stat) + "'")
 
         return result
+
+    def set_poweron(self, vmname):
+        """vmの電源投入
+
+        Returns:
+            bool: 成功:True / 失敗:False (元々電源onの場合含む)
+        """
+        vmid = self.get_vmid(vmname)
+        result = None
+
+        stdin, stdout, stderr = self.__client.exec_command("vim-cmd vmsvc/power.on " + vmid)
+        if stdout.channel.recv_exit_status() == 0:
+            result = True
+        else:
+            result = False
+
+        stdin.close()
+        stdout.close()
+        stderr.close()
+
+        return result
