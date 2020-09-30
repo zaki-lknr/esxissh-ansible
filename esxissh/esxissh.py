@@ -84,6 +84,7 @@ class EsxiSsh:
         """
         vmid = self.get_vmid(vmname)
         result = None
+        stat = None
 
         stdin, stdout, stderr = self.__client.exec_command("vim-cmd vmsvc/power.getstate " + vmid)
         for line in stdout:
@@ -94,11 +95,13 @@ class EsxiSsh:
                 elif m.group(1) == "off":
                     result = False
                 else:
-                    raise Exception("unknown state: '" + result.group(1) + "'")
-                    # あれ？この時どうやってclose()するんだ？
+                    stat = result.group(1)
 
         stdin.close()
         stdout.close()
         stderr.close()
+
+        if result == None:
+            raise Exception("unknown state: '" + str(stat) + "'")
 
         return result
