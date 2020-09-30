@@ -43,4 +43,17 @@ if __name__ == '__main__':
     r = esxi.set_shutdown("desktop")
     print("desktop set_shutdown: " + str(r))
 
+    print("=== enter to continue ===")
+    input()
+
+    #### poweroff ##############################
+    # desktop-centos poweroff (FALSE)
+    r = esxi.set_poweroff("desktop-centos")
+    print("desktop-centos set_poweroff: " + str(r))
+
+    # desktop poweroff (TRUE)
+    r = esxi.set_poweroff("desktop")
+    print("desktop set_poweroff: " + str(r))
+
+
     esxi.finalize()
