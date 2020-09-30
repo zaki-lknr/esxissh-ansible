@@ -17,11 +17,12 @@ if __name__ == '__main__':
     print("vmid: " + vmid)
 
     r = esxi.get_powerstate("cloud-dev")
-    print("cloud-dev poweron: " + str(r))
+    print("cloud-dev poweron state: " + str(r))
 
     r = esxi.get_powerstate("desktop")
-    print("desktop poweron: " + str(r))
+    print("desktop poweron state: " + str(r))
 
+    #### power on ##############################
     # desktop-centos poweron (TRUE)
     r = esxi.set_poweron("desktop-centos")
     print("desktop-centos poweron: " + str(r))
@@ -29,5 +30,17 @@ if __name__ == '__main__':
     # cloud-dev poweron (FALSE)
     r = esxi.set_poweron("cloud-dev")
     print("cloud-dev poweron: " + str(r))
+
+    print("=== enter to continue ===")
+    input()
+
+    #### shutdown ##############################
+    # desktop-centos shutdown (TRUE)
+    r = esxi.set_shutdown("desktop-centos")
+    print("desktop-centos set_shutdown: " + str(r))
+
+    # desktop shutdown (FALSE)
+    r = esxi.set_shutdown("desktop")
+    print("desktop set_shutdown: " + str(r))
 
     esxi.finalize()

@@ -126,3 +126,24 @@ class EsxiSsh:
         stderr.close()
 
         return result
+
+    def set_shutdown(self, vmname):
+        """vmのシャットダウン
+
+        Returns:
+            bool: 成功:True / 失敗:False (vmware-tools未インストールによる失敗含む)
+        """
+        vmid = self.get_vmid(vmname)
+        result = None
+
+        stdin, stdout, stderr = self.__client.exec_command("vim-cmd vmsvc/power.shutdown " + vmid)
+        if stdout.channel.recv_exit_status() == 0:
+            result = True
+        else:
+            result = False
+
+        stdin.close()
+        stdout.close()
+        stderr.close()
+
+        return result
