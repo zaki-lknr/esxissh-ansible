@@ -168,3 +168,27 @@ class EsxiSsh:
         stderr.close()
 
         return result
+
+    def create_vm(self, vmname, datastore):
+        """vm作成
+
+        """
+
+        result = self.__exec_createdummyvm(vmname, datastore)
+
+        return result
+
+    def __exec_createdummyvm(self, vmname, datastore):
+        result = None
+
+        stdin, stdout, stderr = self.__client.exec_command('vim-cmd vmsvc/createdummyvm ' + vmname + ' /vmfs/volumes/' + datastore)
+        if stdout.channel.recv_exit_status() == 0:
+            result = True
+        else:
+            result = False
+
+        stdin.close()
+        stdout.close()
+        stderr.close()
+
+        return result
