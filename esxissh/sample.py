@@ -31,6 +31,10 @@ if __name__ == '__main__':
     r = esxi.set_poweron("cloud-dev")
     print("cloud-dev poweron: " + str(r))
 
+    # desktop poweron (TRUE)
+    r = esxi.set_poweron("desktop")
+    print("desktop set_poweron: " + str(r))
+
     print("=== enter to continue ===")
     input()
 
