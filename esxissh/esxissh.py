@@ -191,4 +191,31 @@ class EsxiSsh:
         stdout.close()
         stderr.close()
 
+        # vmリストを更新
+        self.__get_vm_list()
+
+        return result
+
+    def delete_vm(self, vmname):
+        """vm削除
+
+        """
+
+        vmid = self.get_vmid(vmname)
+        result = self.__exec_vm_destroy(vmid)
+        return result
+
+    def __exec_vm_destroy(self, vmid):
+        result = None
+
+        stdin, stdout, stderr = self.__client.exec_command('vim-cmd vmsvc/destroy ' + vmid)
+        if stdout.channel.recv_exit_status() == 0:
+            result = True
+        else:
+            result = False
+
+        stdin.close()
+        stdout.close()
+        stderr.close()
+
         return result

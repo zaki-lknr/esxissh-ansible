@@ -14,6 +14,13 @@ if __name__ == '__main__':
     esxi = esxissh.EsxiSsh(esxihost, username, password)
     esxi.initialize()
 
-    esxi.create_vm("zzz-sample", "WDS100T2B0A")
+    r = esxi.create_vm("zzz-sample", "WDS100T2B0A")
+    print("create zzz-sample: " + str(r))
+
+    print("=== enter to continue ===")
+    input()
+
+    r = esxi.delete_vm("zzz-sample")
+    print("delete zzz-sample: " + str(r))
 
     esxi.finalize()
