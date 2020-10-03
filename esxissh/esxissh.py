@@ -204,6 +204,30 @@ class EsxiSsh:
 
         return result
 
+    def _set_guestos(self, vmname, datastore, guestos):
+        result = None
+        vmxfile = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
+
+        # 既存guestOS行の削除
+        stdin, stdout, stderr = self.__client.exec_command("sed -i -e '/^guestOS /d' " + vmxfile)
+        result = stdout.channel.recv_exit_status()
+
+        stdin.close()
+        stdout.close()
+        stderr.close()
+
+        if result != 0:
+            return False
+
+        stdin, stdout, stderr = self.__client.exec_command("echo 'guestOS = \"" + guestos + "\"' >> " + vmxfile)
+        result = stdout.channel.recv_exit_status()
+
+        stdin.close()
+        stdout.close()
+        stderr.close()
+
+        return result == 0
+
     def delete_vm(self, vmname):
         """vm削除
 

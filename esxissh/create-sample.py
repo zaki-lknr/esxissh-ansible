@@ -17,6 +17,9 @@ if __name__ == '__main__':
     r = esxi.create_vm("zzz-sample", "WDS100T2B0A")
     print("create zzz-sample: " + str(r))
 
+    r = esxi._set_guestos("zzz-sample", "WDS100T2B0A", "centos7-64")
+    print("_set_guestos zzz-sample: " + str(r))
+
     print("=== enter to continue ===")
     input()
 
