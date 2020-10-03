@@ -174,6 +174,8 @@ class EsxiSsh:
 
         """
 
+        # todo 同名vmが作れてしまうので、作成処理前にvm作成済み処理を入れる
+
         result = self.__exec_createdummyvm(vmname, datastore)
 
         return result
@@ -181,6 +183,7 @@ class EsxiSsh:
     def __exec_createdummyvm(self, vmname, datastore):
         result = None
 
+        # todo vmidを返すこと
         stdin, stdout, stderr = self.__client.exec_command('vim-cmd vmsvc/createdummyvm ' + vmname + ' /vmfs/volumes/' + datastore)
         if stdout.channel.recv_exit_status() == 0:
             result = True
