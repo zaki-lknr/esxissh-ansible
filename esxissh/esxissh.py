@@ -176,11 +176,27 @@ class EsxiSsh:
 
         # todo 同名vmが作れてしまうので、作成処理前にvm作成済み処理を入れる
 
-        result = self.__exec_createdummyvm(vmname, datastore)
-        # print("__exec_createdummyvm: " + str(result))
+        vmid = self.__exec_createdummyvm(vmname, datastore)
 
         result = self.__set_guestos(vmname, datastore, guestos)
         print("set guest: " + str(result))
+
+        self.__reload_vm(vmid)
+
+        return result
+
+    def __reload_vm(self, vmid):
+        """vm情報のreload
+
+        vmxファイルを変更した後などにコールすることで変更内容を反映する
+        
+        """
+
+        stdin, stdout, stderr = self.__client.exec_command('vim-cmd vmsvc/reload ' + vmid)
+        result = stdout.channel.recv_exit_status()
+        stdin.close()
+        stdout.close()
+        stderr.close()
 
         return result
 
