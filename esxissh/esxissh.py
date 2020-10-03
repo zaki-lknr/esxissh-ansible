@@ -169,7 +169,7 @@ class EsxiSsh:
 
         return result
 
-    def create_vm(self, vmname, datastore):
+    def create_vm(self, vmname, datastore, guestos):
         """vm作成
 
         """
@@ -178,6 +178,9 @@ class EsxiSsh:
 
         result = self.__exec_createdummyvm(vmname, datastore)
         # print("__exec_createdummyvm: " + str(result))
+
+        result = self.__set_guestos(vmname, datastore, guestos)
+        print("set guest: " + str(result))
 
         return result
 
@@ -204,7 +207,7 @@ class EsxiSsh:
 
         return result
 
-    def _set_guestos(self, vmname, datastore, guestos):
+    def __set_guestos(self, vmname, datastore, guestos):
         result = None
         vmxfile = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
 

@@ -14,11 +14,8 @@ if __name__ == '__main__':
     esxi = esxissh.EsxiSsh(esxihost, username, password)
     esxi.initialize()
 
-    r = esxi.create_vm("zzz-sample", "WDS100T2B0A")
+    r = esxi.create_vm("zzz-sample", "WDS100T2B0A", "centos7-64")
     print("create zzz-sample: " + str(r))
-
-    r = esxi._set_guestos("zzz-sample", "WDS100T2B0A", "centos7-64")
-    print("_set_guestos zzz-sample: " + str(r))
 
     print("=== enter to continue ===")
     input()
