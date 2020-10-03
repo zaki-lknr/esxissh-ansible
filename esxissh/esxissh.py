@@ -177,18 +177,23 @@ class EsxiSsh:
         # todo 同名vmが作れてしまうので、作成処理前にvm作成済み処理を入れる
 
         result = self.__exec_createdummyvm(vmname, datastore)
+        # print("__exec_createdummyvm: " + str(result))
 
         return result
 
     def __exec_createdummyvm(self, vmname, datastore):
+        """vm作成
+
+        vim-cmd vmsvc/createdummyvmを使ったvmテンプレート作成
+
+        Returns:
+            int: vmid (失敗時None)
+        """
         result = None
 
-        # todo vmidを返すこと
         stdin, stdout, stderr = self.__client.exec_command('vim-cmd vmsvc/createdummyvm ' + vmname + ' /vmfs/volumes/' + datastore)
         if stdout.channel.recv_exit_status() == 0:
-            result = True
-        else:
-            result = False
+            result = stdout.readline().rstrip()
 
         stdin.close()
         stdout.close()
