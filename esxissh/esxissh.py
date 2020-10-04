@@ -169,7 +169,7 @@ class EsxiSsh:
 
         return result
 
-    def create_vm(self, vmname, datastore, guestos):
+    def create_vm(self, vmname, datastore, guestos, vcpus):
         """vm作成
 
         """
@@ -180,6 +180,9 @@ class EsxiSsh:
 
         result = self.__set_guestos(vmname, datastore, guestos)
         print("set guest: " + str(result))
+
+        result = self.__set_vcpus(vmname, datastore, vcpus)
+        print("set vcpus: " + str(result))
 
         self.__reload_vm(vmid)
 
@@ -239,6 +242,30 @@ class EsxiSsh:
             return False
 
         stdin, stdout, stderr = self.__client.exec_command("echo 'guestOS = \"" + guestos + "\"' >> " + vmxfile)
+        result = stdout.channel.recv_exit_status()
+
+        stdin.close()
+        stdout.close()
+        stderr.close()
+
+        return result == 0
+
+    def __set_vcpus(self, vmname, datastore, vcpus):
+        result = None
+        vmxfile = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
+
+        # 既存numvcpus行の削除 (初期状態は無いけど一応)
+        stdin, stdout, stderr = self.__client.exec_command("sed -i -e '/^numvcpus /d' " + vmxfile)
+        result = stdout.channel.recv_exit_status()
+
+        stdin.close()
+        stdout.close()
+        stderr.close()
+
+        if result != 0:
+            return False
+
+        stdin, stdout, stderr = self.__client.exec_command("echo 'numvcpus = \"" + str(vcpus) + "\"' >> " + vmxfile)
         result = stdout.channel.recv_exit_status()
 
         stdin.close()
