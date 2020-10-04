@@ -172,6 +172,11 @@ class EsxiSsh:
     def create_vm(self, vmname, datastore, guestos, vcpus):
         """vm作成
 
+        Args:
+            vmname (str): vm名
+            datastore (str): データストア名
+            guestos (str): ゲストOS種別
+            vcpus (int): vCPUs数
         """
 
         # todo 同名vmが作れてしまうので、作成処理前にvm作成済み処理を入れる
@@ -192,7 +197,7 @@ class EsxiSsh:
         """vm情報のreload
 
         vmxファイルを変更した後などにコールすることで変更内容を反映する
-        
+
         """
 
         stdin, stdout, stderr = self.__client.exec_command('vim-cmd vmsvc/reload ' + vmid)
