@@ -169,7 +169,7 @@ class EsxiSsh:
 
         return result
 
-    def create_vm(self, vmname, datastore, guestos, vcpus):
+    def create_vm(self, vmname, datastore, guestos, vcpus, memory):
         """vm作成
 
         Args:
@@ -177,6 +177,7 @@ class EsxiSsh:
             datastore (str): データストア名
             guestos (str): ゲストOS種別
             vcpus (int): vCPUs数
+            memory (int): memoryサイズ(MB)
         """
 
         # todo 同名vmが作れてしまうので、作成処理前にvm作成済み処理を入れる
@@ -188,6 +189,9 @@ class EsxiSsh:
 
         result = self.__set_vcpus(vmname, datastore, vcpus)
         print("set vcpus: " + str(result))
+
+        result = self.__set_memory(vmname, datastore, memory)
+        print("set memory: " + str(result))
 
         self.__reload_vm(vmid)
 
@@ -238,6 +242,10 @@ class EsxiSsh:
     def __set_vcpus(self, vmname, datastore, vcpus):
         vmxfile = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
         return self.__updateline(vmxfile, "numvcpus", str(vcpus))
+
+    def __set_memory(self, vmname, datastore, memory):
+        vmxfile = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
+        return self.__updateline(vmxfile, "memSize", str(memory))
 
     def __updateline(self, file, key, value):
         # 既存行を削除
