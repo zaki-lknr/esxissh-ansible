@@ -232,35 +232,16 @@ class EsxiSsh:
         return result
 
     def __set_guestos(self, vmname, datastore, guestos):
-        result = None
         vmxfile = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
-
-        # 既存guestOS行の削除
-        stdin, stdout, stderr = self.__client.exec_command("sed -i -e '/^guestOS /d' " + vmxfile)
-        result = stdout.channel.recv_exit_status()
-
-        stdin.close()
-        stdout.close()
-        stderr.close()
-
-        if result != 0:
-            return False
-
-        stdin, stdout, stderr = self.__client.exec_command("echo 'guestOS = \"" + guestos + "\"' >> " + vmxfile)
-        result = stdout.channel.recv_exit_status()
-
-        stdin.close()
-        stdout.close()
-        stderr.close()
-
-        return result == 0
+        return self.__updateline(vmxfile, "guestOS", guestos)
 
     def __set_vcpus(self, vmname, datastore, vcpus):
-        result = None
         vmxfile = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
+        return self.__updateline(vmxfile, "numvcpus", str(vcpus))
 
-        # 既存numvcpus行の削除 (初期状態は無いけど一応)
-        stdin, stdout, stderr = self.__client.exec_command("sed -i -e '/^numvcpus /d' " + vmxfile)
+    def __updateline(self, file, key, value):
+        # 既存行を削除
+        stdin, stdout, stderr = self.__client.exec_command("sed -i -e '/^" + key + " /d' " + file)
         result = stdout.channel.recv_exit_status()
 
         stdin.close()
@@ -270,7 +251,7 @@ class EsxiSsh:
         if result != 0:
             return False
 
-        stdin, stdout, stderr = self.__client.exec_command("echo 'numvcpus = \"" + str(vcpus) + "\"' >> " + vmxfile)
+        stdin, stdout, stderr = self.__client.exec_command("echo '" + key + " = \"" + value + "\"' >> " + file)
         result = stdout.channel.recv_exit_status()
 
         stdin.close()
