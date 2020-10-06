@@ -291,3 +291,24 @@ class EsxiSsh:
         stderr.close()
 
         return result
+
+class EsxiNetwork:
+    def __init__(self):
+        self.nic_list = []
+
+    def add(self, network_name, virtual_dev='vmxnet3', address_type="generated", upt_compatibility=True, present=True):
+        self.nic_list.append(
+            {
+                'virtualDev': virtual_dev,
+                'networkName': network_name,
+                'addressType': address_type,
+                'uptCompatibility': upt_compatibility,
+                'present': present
+            }
+        )
+
+    def length(self):
+        return len(self.nic_list)
+
+    def get(self, index):
+        return self.nic_list[index]
