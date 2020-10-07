@@ -169,7 +169,7 @@ class EsxiSsh:
 
         return result
 
-    def create_vm(self, vmname, datastore, guestos, vcpus, memory):
+    def create_vm(self, vmname, datastore, guestos, vcpus, memory, network=None):
         """vm作成
 
         Args:
@@ -192,6 +192,26 @@ class EsxiSsh:
 
         result = self.__set_memory(vmname, datastore, memory)
         print("set memory: " + str(result))
+
+        # todo 仮実装
+        if (network != None):
+            file = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
+            for i in range(network.length()):
+                network_define = "ethernet{}.virtualDev = ".format(str(i)) + '"{}"'.format(network.get(i)['virtualDev']) + "\n"
+                network_define += "ethernet{}.networkName = ".format(str(i)) + '"{}"'.format(network.get(i)['networkName']) + "\n"
+                network_define += "ethernet{}.addressType = ".format(str(i)) + '"{}"'.format(network.get(i)['addressType']) + "\n"
+                network_define += "ethernet{}.uptCompatibility = ".format(str(i)) + '"{}"'.format(str(network.get(i)['uptCompatibility']).upper()) + "\n"
+                network_define += "ethernet{}.present = ".format(str(i)) + '"{}"'.format(str(network.get(i)['present']).upper()) + "\n"
+
+                command = "cat  >> " + file + ' << __EOL__' + "\n" + network_define + "__EOL__\n"
+                print(command)
+                stdin, stdout, stderr = self.__client.exec_command(command)
+                result = stdout.channel.recv_exit_status()
+
+                stdin.close()
+                stdout.close()
+                stderr.close()
+
 
         self.__reload_vm(vmid)
 

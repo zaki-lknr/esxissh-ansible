@@ -16,5 +16,11 @@ if __name__ == '__main__':
     nets.add("private-network-1")
     print(nets.length())
 
-    print(nets.get(0))
-    print(nets.get(1))
+    # print(nets.get(0))
+    # print(nets.get(1))
+
+    for i in range(nets.length()):
+        print("index: " + str(i))
+        print(nets.get(i))
+        network_define = "ethernet{}.virtualDev = ".format(str(i)) + '"{}"'.format(nets.get(i)['virtualDev'])
+        print(network_define)
