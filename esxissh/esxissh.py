@@ -73,6 +73,18 @@ class EsxiSsh:
         """
         return self.__vmlist[vmname]["vmid"]
 
+    def get_vmxfile(self, vmname):
+        """vmxファイルパス取得
+
+        Args:
+            vmname: VM名
+
+        Returns:
+            str: vmx filepath
+        """
+        #vmxfile = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
+        return '/vmfs/volumes/' + self.__vmlist[vmname]['ds'] + '/' + self.__vmlist[vmname]['file']
+
     def get_powerstate(self, vmname):
         """vmの電源on状態を取得
 
