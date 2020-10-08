@@ -193,25 +193,9 @@ class EsxiSsh:
         result = self.__set_memory(vmname, datastore, memory)
         print("set memory: " + str(result))
 
-        # todo 仮実装
         if (network != None):
-            file = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
-            for i in range(network.length()):
-                network_define = "ethernet{}.virtualDev = ".format(str(i)) + '"{}"'.format(network.get(i)['virtualDev']) + "\n"
-                network_define += "ethernet{}.networkName = ".format(str(i)) + '"{}"'.format(network.get(i)['networkName']) + "\n"
-                network_define += "ethernet{}.addressType = ".format(str(i)) + '"{}"'.format(network.get(i)['addressType']) + "\n"
-                network_define += "ethernet{}.uptCompatibility = ".format(str(i)) + '"{}"'.format(str(network.get(i)['uptCompatibility']).upper()) + "\n"
-                network_define += "ethernet{}.present = ".format(str(i)) + '"{}"'.format(str(network.get(i)['present']).upper()) + "\n"
-
-                command = "cat  >> " + file + ' << __EOL__' + "\n" + network_define + "__EOL__\n"
-                print(command)
-                stdin, stdout, stderr = self.__client.exec_command(command)
-                result = stdout.channel.recv_exit_status()
-
-                stdin.close()
-                stdout.close()
-                stderr.close()
-
+            vmxfile = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
+            self.__set_network(network, vmxfile)
 
         self.__reload_vm(vmid)
 
@@ -287,6 +271,24 @@ class EsxiSsh:
         stderr.close()
 
         return result == 0
+
+    def __set_network(self, network, vmxfile):
+        for i in range(network.length()):
+            network_define = "ethernet{}.virtualDev = ".format(str(i)) + '"{}"'.format(network.get(i)['virtualDev']) + "\n"
+            network_define += "ethernet{}.networkName = ".format(str(i)) + '"{}"'.format(network.get(i)['networkName']) + "\n"
+            network_define += "ethernet{}.addressType = ".format(str(i)) + '"{}"'.format(network.get(i)['addressType']) + "\n"
+            network_define += "ethernet{}.uptCompatibility = ".format(str(i)) + '"{}"'.format(str(network.get(i)['uptCompatibility']).upper()) + "\n"
+            network_define += "ethernet{}.present = ".format(str(i)) + '"{}"'.format(str(network.get(i)['present']).upper()) + "\n"
+
+            command = "cat  >> " + vmxfile + ' << __EOL__' + "\n" + network_define + "__EOL__\n"
+            # print(command)
+            stdin, stdout, stderr = self.__client.exec_command(command)
+            result = stdout.channel.recv_exit_status()
+
+            stdin.close()
+            stdout.close()
+            stderr.close()
+
 
     def delete_vm(self, vmname):
         """vm削除
