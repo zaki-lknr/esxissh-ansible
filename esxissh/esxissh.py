@@ -252,15 +252,15 @@ class EsxiSsh:
         return result
 
     def __set_guestos(self, vmname, datastore, guestos):
-        vmxfile = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
+        vmxfile = self.get_vmxfile(vmname)  #'/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
         return self.__updateline(vmxfile, "guestOS", guestos)
 
     def __set_vcpus(self, vmname, datastore, vcpus):
-        vmxfile = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
+        vmxfile = self.get_vmxfile(vmname)  #'/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
         return self.__updateline(vmxfile, "numvcpus", str(vcpus))
 
     def __set_memory(self, vmname, datastore, memory):
-        vmxfile = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
+        vmxfile = self.get_vmxfile(vmname)  #'/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
         return self.__updateline(vmxfile, "memSize", str(memory))
 
     def __updateline(self, file, key, value):
