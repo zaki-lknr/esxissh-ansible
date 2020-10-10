@@ -24,3 +24,13 @@ if __name__ == '__main__':
         print(nets.get(i))
         network_define = "ethernet{}.virtualDev = ".format(str(i)) + '"{}"'.format(nets.get(i)['virtualDev'])
         print(network_define)
+
+    print("---- disk ----")
+    disks = esxissh.EsxiDisk()
+    disks.add(20, 'thin')
+    disks.add(5, 'eagerzeroedthick')
+    print(disks)
+
+    for i in range(disks.length()):
+        print("index: " + str(i))
+        print(disks.get(i))

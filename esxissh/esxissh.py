@@ -346,3 +346,21 @@ class EsxiNetwork:
 
     def get(self, index):
         return self.nic_list[index]
+
+class EsxiDisk:
+    def __init__(self):
+        self.disk_list = []
+
+    def add(self, size, disk_format='thin'):
+        self.disk_list.append(
+            {
+                'size': size,
+                'diskformat': disk_format
+            }
+        )
+
+    def length(self):
+        return len(self.disk_list)
+
+    def get(self, index):
+        return self.disk_list[index]
