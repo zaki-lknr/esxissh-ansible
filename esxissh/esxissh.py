@@ -1,5 +1,6 @@
 import paramiko
 import re
+import os
 
 class EsxiSsh:
     """EsxiSsh
@@ -211,6 +212,9 @@ class EsxiSsh:
 
         self.__reload_vm(vmid)
 
+        vmxfile = self.get_vmxfile(vmname)
+        self.__set_storage(None, vmxfile)
+
         return result
 
     def __reload_vm(self, vmid):
@@ -301,6 +305,37 @@ class EsxiSsh:
             stdout.close()
             stderr.close()
 
+    def __set_storage(self, disks, vmxfile):
+        basepath, ext = os.path.splitext(vmxfile)
+        # 既存disk削除
+        vmdkfile = basepath + '.vmdk'
+        stdin, stdout, stderr = self.__client.exec_command('vmkfstools --deletevirtualdisk ' + vmdkfile)
+        if stdout.channel.recv_exit_status() == 0:
+            result = True
+        else:
+            result = False
+
+        stdin.close()
+        stdout.close()
+        stderr.close()
+
+        # 既存定義削除
+        # 本当は↑で削除したvmdkファイル名に対応したSCSIの番号をちゃんと突き合わせて行削除したい。
+        # が、さすがにオーバーキルなのとvm作成直後前提ということでscsi0:0固定で処理
+        delete_controller = 'scsi0:0'
+        stdin, stdout, stderr = self.__client.exec_command("sed -i -e '/^" + delete_controller + "/d' " + vmxfile)
+        if stdout.channel.recv_exit_status() == 0:
+            result = True
+        else:
+            result = False
+
+        stdin.close()
+        stdout.close()
+        stderr.close()
+
+        # disk作成
+        # 定義追加
+        # SCSIアダプタ設定
 
     def delete_vm(self, vmname):
         """vm削除
