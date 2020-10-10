@@ -207,7 +207,7 @@ class EsxiSsh:
         print("set memory: " + str(result))
 
         if (network != None):
-            vmxfile = '/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
+            vmxfile = self.get_vmxfile(vmname) #'/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
             self.__set_network(network, vmxfile)
 
         self.__reload_vm(vmid)
