@@ -352,7 +352,20 @@ class EsxiSsh:
             stdout.close()
             stderr.close()
 
-        # 定義追加
+            # 定義追加
+            disk_define = "scsi0:{}.deviceType = ".format(str(i)) + '"scsi-hardDisk"' + "\n"
+            disk_define += "scsi0:{}.filename = ".format(str(i)) + '"{}"'.format(os.path.basename(vmdkfile)) + "\n"
+            disk_define += "scsi0:{}.present = ".format(str(i)) + '"TRUE"' + "\n"
+
+            command = "cat  >> " + vmxfile + ' << __EOL__' + "\n" + disk_define + "__EOL__\n"
+            # print(command)
+            stdin, stdout, stderr = self.__client.exec_command(command)
+            result = stdout.channel.recv_exit_status()
+
+            stdin.close()
+            stdout.close()
+            stderr.close()
+
         # SCSIアダプタ設定
 
     def delete_vm(self, vmname):
