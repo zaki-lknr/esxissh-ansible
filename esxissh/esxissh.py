@@ -365,6 +365,7 @@ class EsxiSsh:
             stderr.close()
 
         # SCSIアダプタ設定
+        self.__updateline(vmxfile, "scsi0.virtualDev", disks.virtual_device)
 
     def delete_vm(self, vmname):
         """vm削除
