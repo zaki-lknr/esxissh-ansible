@@ -308,8 +308,9 @@ class EsxiSsh:
 
     def __set_storage(self, disks, vmxfile):
         basepath, ext = os.path.splitext(vmxfile)
-        # 既存disk削除
         vmdkfile = basepath + '.vmdk'
+        basedirpath = os.path.dirname(vmxfile)
+        # 既存disk削除
         stdin, stdout, stderr = self.__client.exec_command('vmkfstools --deletevirtualdisk ' + vmdkfile)
         if stdout.channel.recv_exit_status() == 0:
             result = True
@@ -335,14 +336,11 @@ class EsxiSsh:
         stderr.close()
 
         # disk作成
-        # 削除時の処理でvmdkfileのファイルパスは変数作成済みなので、そのまま使用する。。。別メソッド分割時は注意
-
-        # todo: 2つ目のディスクも同じファイル名になっている。。
-        #       EsxiDiskクラスでファイル名も持たせるようにしないといけない。(デフォルト値有りで)
         for i in range(disks.length()):
             disk_size = disks.get(i)['size']
             disk_format = disks.get(i)['diskformat']
-            stdin, stdout, stderr = self.__client.exec_command('vmkfstools -c ' + str(disk_size) + 'G -d ' + disk_format + ' ' + vmdkfile)
+            disk_filename = basedirpath + '/' + disks.get(i)['name']
+            stdin, stdout, stderr = self.__client.exec_command('vmkfstools -c ' + str(disk_size) + 'G -d ' + disk_format + ' ' + disk_filename)
             if stdout.channel.recv_exit_status() == 0:
                 result = True
             else:
@@ -354,7 +352,7 @@ class EsxiSsh:
 
             # 定義追加
             disk_define = "scsi0:{}.deviceType = ".format(str(i)) + '"scsi-hardDisk"' + "\n"
-            disk_define += "scsi0:{}.filename = ".format(str(i)) + '"{}"'.format(os.path.basename(vmdkfile)) + "\n"
+            disk_define += "scsi0:{}.filename = ".format(str(i)) + '"{}"'.format(disks.get(i)['name']) + "\n"
             disk_define += "scsi0:{}.present = ".format(str(i)) + '"TRUE"' + "\n"
 
             command = "cat  >> " + vmxfile + ' << __EOL__' + "\n" + disk_define + "__EOL__\n"
@@ -417,9 +415,10 @@ class EsxiDisk:
     def __init__(self):
         self.disk_list = []
 
-    def add(self, size, disk_format='thin'):
+    def add(self, name, size, disk_format='thin'):
         self.disk_list.append(
             {
+                'name': name,
                 'size': size,
                 'diskformat': disk_format
             }

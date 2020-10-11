@@ -27,8 +27,8 @@ if __name__ == '__main__':
 
     print("---- disk ----")
     disks = esxissh.EsxiDisk()
-    disks.add(20, 'thin')
-    disks.add(5, 'eagerzeroedthick')
+    disks.add('sample.vmdk', 20, 'thin')
+    disks.add('hoge.vmdk', 5, 'eagerzeroedthick')
     print(disks)
 
     for i in range(disks.length()):
