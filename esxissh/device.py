@@ -30,6 +30,7 @@ if __name__ == '__main__':
     disks.add('sample.vmdk', 20, 'thin')
     disks.add('hoge.vmdk', 5, 'eagerzeroedthick')
     print(disks)
+    print(disks.virtual_device)
 
     for i in range(disks.length()):
         print("index: " + str(i))

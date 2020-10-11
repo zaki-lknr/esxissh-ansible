@@ -412,8 +412,16 @@ class EsxiNetwork:
         return self.nic_list[index]
 
 class EsxiDisk:
-    def __init__(self):
+    def __init__(self, device="pvscsi"):
         self.disk_list = []
+        self.__virtual_dev = device
+
+    @property
+    def virtual_device(self):
+        return self.__virtual_dev
+    @virtual_device.setter
+    def virtual_device(self, device):
+        self.__virtual_dev = device
 
     def add(self, name, size, disk_format='thin'):
         self.disk_list.append(
