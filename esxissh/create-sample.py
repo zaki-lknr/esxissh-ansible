@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     disks = esxissh.EsxiDisk()
     disks.add('hoge.vmdk', 10, 'thin')
-    disks.add('foobar.vmdk', 5, 'eagerzeroedthick')
+    # disks.add('foobar.vmdk', 5, 'eagerzeroedthick')
 
     r = esxi.create_vm("z-sample", "WDS100T2B0A", "centos7-64", 2, 2048, nets, disks)
     print("create zzz-sample: " + str(r))
