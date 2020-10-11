@@ -336,6 +336,9 @@ class EsxiSsh:
 
         # disk作成
         # 削除時の処理でvmdkfileのファイルパスは変数作成済みなので、そのまま使用する。。。別メソッド分割時は注意
+
+        # todo: 2つ目のディスクも同じファイル名になっている。。
+        #       EsxiDiskクラスでファイル名も持たせるようにしないといけない。(デフォルト値有りで)
         for i in range(disks.length()):
             disk_size = disks.get(i)['size']
             disk_format = disks.get(i)['diskformat']
