@@ -182,7 +182,7 @@ class EsxiSsh:
 
         return result
 
-    def create_vm(self, vmname, datastore, guestos, vcpus, memory, network=None):
+    def create_vm(self, vmname, datastore, guestos, vcpus, memory, network=None, disks=None):
         """vm作成
 
         Args:
@@ -210,10 +210,11 @@ class EsxiSsh:
             vmxfile = self.get_vmxfile(vmname) #'/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
             self.__set_network(network, vmxfile)
 
-        self.__reload_vm(vmid)
+        if (disks != None):
+            vmxfile = self.get_vmxfile(vmname)
+            self.__set_storage(disks, vmxfile)
 
-        vmxfile = self.get_vmxfile(vmname)
-        self.__set_storage(None, vmxfile)
+        self.__reload_vm(vmid)
 
         return result
 
@@ -334,6 +335,20 @@ class EsxiSsh:
         stderr.close()
 
         # disk作成
+        # 削除時の処理でvmdkfileのファイルパスは変数作成済みなので、そのまま使用する。。。別メソッド分割時は注意
+        for i in range(disks.length()):
+            disk_size = disks.get(i)['size']
+            disk_format = disks.get(i)['diskformat']
+            stdin, stdout, stderr = self.__client.exec_command('vmkfstools -c ' + str(disk_size) + 'G -d ' + disk_format + ' ' + vmdkfile)
+            if stdout.channel.recv_exit_status() == 0:
+                result = True
+            else:
+                result = False
+
+            stdin.close()
+            stdout.close()
+            stderr.close()
+
         # 定義追加
         # SCSIアダプタ設定
 

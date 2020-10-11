@@ -18,7 +18,10 @@ if __name__ == '__main__':
     nets.add("VM Network")
     nets.add("private-network-1")
 
-    r = esxi.create_vm("z-sample", "WDS100T2B0A", "centos7-64", 2, 2048, nets)
+    disks = esxissh.EsxiDisk()
+    disks.add(5, 'thin')
+
+    r = esxi.create_vm("z-sample", "WDS100T2B0A", "centos7-64", 2, 2048, nets, disks)
     print("create zzz-sample: " + str(r))
 
     print("=== enter to continue ===")
