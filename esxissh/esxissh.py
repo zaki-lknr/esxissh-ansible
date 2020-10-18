@@ -23,8 +23,8 @@ class EsxiSsh:
         self.__esxiaddr = esxiaddr
 
     def __connection(self):
-        print("host: " + self.__esxiaddr)
-        print("user: " + self.__username)
+        # print("host: " + self.__esxiaddr)
+        # print("user: " + self.__username)
         self.__client = paramiko.SSHClient()
         self.__client.load_system_host_keys()
         self.__client.connect(self.__esxiaddr, username=self.__username, password=self.__password)
@@ -198,13 +198,13 @@ class EsxiSsh:
         vmid = self.__exec_createdummyvm(vmname, datastore)
 
         result = self.__set_guestos(vmname, datastore, guestos)
-        print("set guest: " + str(result))
+        # print("set guest: " + str(result))
 
         result = self.__set_vcpus(vmname, datastore, vcpus)
-        print("set vcpus: " + str(result))
+        # print("set vcpus: " + str(result))
 
         result = self.__set_memory(vmname, datastore, memory)
-        print("set memory: " + str(result))
+        # print("set memory: " + str(result))
 
         if (network != None):
             vmxfile = self.get_vmxfile(vmname) #'/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
