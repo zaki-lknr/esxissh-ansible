@@ -1,8 +1,5 @@
-import os
-import sys
 from ansible.module_utils.basic import *
-sys.path.append("/home/zaki/src/py-esxi-ssh/esxissh")  # <- これ
-import esxissh
+import esxissh  # require "pip install esxissh"
 
 def run_module():
 
