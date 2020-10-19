@@ -1,0 +1,4 @@
+[all:vars]
+esxiaddr=192.168.0.0
+esxiuser=root
+esxipass=********

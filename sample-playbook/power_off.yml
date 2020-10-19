@@ -1,0 +1,11 @@
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+  - name: power_off
+    esxissh_guest_power:
+      esxiaddress: '{{ esxiaddr }}'
+      esxiusername: '{{ esxiuser }}'
+      esxipassword: '{{ esxipass }}'
+      vmname: test.vm
+      state: shutdown
