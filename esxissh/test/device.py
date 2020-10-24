@@ -14,6 +14,7 @@ if __name__ == '__main__':
     username = ini.get('esxi', 'username')
     password = ini.get('esxi', 'password')
 
+    print("---- nic ----")
     nets = esxissh.EsxiNetwork()
     nets.add("VM Network")
     nets.add("private-network-1")
@@ -38,3 +39,12 @@ if __name__ == '__main__':
     for i in range(disks.length()):
         print("index: " + str(i))
         print(disks.get(i))
+
+    print("---- media(cd/dvd) ----")
+    media = esxissh.EsxiMedia()
+    media.add('iso', 'cheddar-share/disk2/archive/iso/CentOS-7-x86_64-Minimal-1908.iso')
+    print(media)
+
+    for i in range(media.length()):
+        print("index: " + str(i))
+        print(media.get(i))

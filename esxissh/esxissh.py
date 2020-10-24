@@ -438,3 +438,21 @@ class EsxiDisk:
 
     def get(self, index):
         return self.disk_list[index]
+
+class EsxiMedia:
+    def __init__(self):
+        self.media_list = []
+
+    def add(self, type, path):
+        self.media_list.append(
+            {
+                'type': type,
+                'path': path
+            }
+        )
+
+    def length(self):
+        return len(self.media_list)
+
+    def get(self, index):
+        return self.media_list[index]
