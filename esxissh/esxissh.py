@@ -182,7 +182,7 @@ class EsxiSsh:
 
         return result
 
-    def create_vm(self, vmname, datastore, guestos, vcpus, memory, network=None, disks=None):
+    def create_vm(self, vmname, datastore, guestos, vcpus, memory, network=None, disks=None, media=None):
         """vm作成
 
         Args:
@@ -213,6 +213,10 @@ class EsxiSsh:
         if (disks != None):
             vmxfile = self.get_vmxfile(vmname)
             self.__set_storage(disks, vmxfile)
+
+        if (media != None):
+            vmxfile = self.get_vmxfile(vmname)
+            self.__set_mediamount(media, vmxfile)
 
         self.__reload_vm(vmid)
 
@@ -366,6 +370,20 @@ class EsxiSsh:
 
         # SCSIアダプタ設定
         self.__updateline(vmxfile, "scsi0.virtualDev", disks.virtual_device)
+
+    def __set_mediamount(self, media, vmxfile):
+        for i in range(media.length()):
+            media_define = "ide0:{}.deviceType = ".format(str(i)) + '"cdrom-image"' + "\n"
+            media_define += "ide0:{}.filename = ".format(str(i)) + '"/vmfs/volumes/{}"'.format(media.get(i)['path']) + "\n"
+            media_define += "ide0:{}.present = ".format(str(i)) + '"TRUE"' + "\n"
+
+            command = "cat  >> " + vmxfile + ' << __EOL__' + "\n" + media_define + "__EOL__\n"
+            stdin, stdout, stderr = self.__client.exec_command(command)
+            result = stdout.channel.recv_exit_status()
+
+            stdin.close()
+            stdout.close()
+            stderr.close()
 
     def delete_vm(self, vmname):
         """vm削除

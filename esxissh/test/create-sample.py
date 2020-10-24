@@ -25,7 +25,10 @@ if __name__ == '__main__':
     disks.add('hoge.vmdk', 10, 'thin')
     # disks.add('foobar.vmdk', 5, 'eagerzeroedthick')
 
-    r = esxi.create_vm("z-sample", "WDS100T2B0A", "centos7-64", 2, 2048, nets, disks)
+    media = esxissh.EsxiMedia()
+    media.add('iso', 'cheddar-share/disk2/archive/iso/CentOS-7-x86_64-Minimal-1908.iso')
+
+    r = esxi.create_vm("z-sample", "WDS100T2B0A", "centos7-64", 2, 2048, nets, disks, media)
     print("create zzz-sample: " + str(r))
 
     print("=== enter to continue ===")
