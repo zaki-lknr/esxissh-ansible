@@ -28,12 +28,14 @@ if __name__ == '__main__':
     media = esxissh.EsxiMedia()
     media.add('iso', 'cheddar-share/disk2/archive/iso/CentOS-7-x86_64-Minimal-1908.iso')
 
+    # vm作成
     r = esxi.create_vm("z-sample", "WDS100T2B0A", "centos7-64", 2, 2048, nets, disks, media)
     print("create zzz-sample: " + str(r))
 
     print("=== enter to continue ===")
     input()
 
+    # 作ったvmの削除
     r = esxi.delete_vm("z-sample")
     print("delete zzz-sample: " + str(r))
 
