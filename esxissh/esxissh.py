@@ -126,19 +126,7 @@ class EsxiSsh:
             bool: 成功:True / 失敗:False (元々電源onの場合含む)
         """
         vmid = self.get_vmid(vmname)
-        result = None
-
-        stdin, stdout, stderr = self.__client.exec_command("vim-cmd vmsvc/power.on " + vmid)
-        if stdout.channel.recv_exit_status() == 0:
-            result = True
-        else:
-            result = False
-
-        stdin.close()
-        stdout.close()
-        stderr.close()
-
-        return result
+        return self.__exec_vimcmd('vmsvc/power.on', vmid)
 
     def set_poweroff(self, vmname):
         """vmの電源オフ
@@ -147,19 +135,7 @@ class EsxiSsh:
             bool: 成功:True / 失敗:False (元々電源offの場合含む)
         """
         vmid = self.get_vmid(vmname)
-        result = None
-
-        stdin, stdout, stderr = self.__client.exec_command("vim-cmd vmsvc/power.off " + vmid)
-        if stdout.channel.recv_exit_status() == 0:
-            result = True
-        else:
-            result = False
-
-        stdin.close()
-        stdout.close()
-        stderr.close()
-
-        return result
+        return self.__exec_vimcmd('vmsvc/power.off', vmid)
 
     def set_shutdown(self, vmname):
         """vmのシャットダウン
@@ -168,19 +144,7 @@ class EsxiSsh:
             bool: 成功:True / 失敗:False (vmware-tools未インストールによる失敗含む)
         """
         vmid = self.get_vmid(vmname)
-        result = None
-
-        stdin, stdout, stderr = self.__client.exec_command("vim-cmd vmsvc/power.shutdown " + vmid)
-        if stdout.channel.recv_exit_status() == 0:
-            result = True
-        else:
-            result = False
-
-        stdin.close()
-        stdout.close()
-        stderr.close()
-
-        return result
+        return self.__exec_vimcmd('vmsvc/power.shutdown', vmid)
 
     def create_vm(self, vmname, datastore, guestos, vcpus, memory, network=None, disks=None, media=None):
         """vm作成
@@ -388,16 +352,22 @@ class EsxiSsh:
     def delete_vm(self, vmname):
         """vm削除
 
+        Returns:
+            bool: 成功:True / 失敗:False
         """
-
         vmid = self.get_vmid(vmname)
-        result = self.__exec_vm_destroy(vmid)
-        return result
+        return self.__exec_vimcmd('vmsvc/destroy', vmid)
 
-    def __exec_vm_destroy(self, vmid):
+    def __exec_vimcmd(self, subcommand, args):
+        """vim-cmd 汎用実行
+
+        stdoutが不要で戻り値だけ取れればよいコマンド実行用
+
+        Return:
+            bool: 成功:True / 失敗:False
+        """
         result = None
-
-        stdin, stdout, stderr = self.__client.exec_command('vim-cmd vmsvc/destroy ' + vmid)
+        stdin, stdout, stderr = self.__client.exec_command("vim-cmd " + subcommand + ' ' + args)
         if stdout.channel.recv_exit_status() == 0:
             result = True
         else:
