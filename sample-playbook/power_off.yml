@@ -8,4 +8,5 @@
       esxiusername: '{{ esxiuser }}'
       esxipassword: '{{ esxipass }}'
       vmname: test.vm
+      # state: poweroff
       state: shutdown

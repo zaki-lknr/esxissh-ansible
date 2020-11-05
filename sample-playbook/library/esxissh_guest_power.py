@@ -35,6 +35,9 @@ def run_module():
         if module.params['state'] == 'shutdown':
             if esxi.set_shutdown(module.params['vmname']):
                 result['changed']=True
+        elif module.params['state'] == 'poweroff':
+            if esxi.set_poweroff(module.params['vmname']):
+                result['changed']=True
 
     module.exit_json(**result)
 
