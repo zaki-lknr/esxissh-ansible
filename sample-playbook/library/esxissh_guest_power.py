@@ -1,6 +1,9 @@
 from ansible.module_utils.basic import AnsibleModule
 #import esxissh  # require "pip install esxissh"
-from ansible.module_utils import esxissh
+try:
+    from ansible.module_utils import esxissh
+except ImportError:
+    pass
 
 def run_module():
 

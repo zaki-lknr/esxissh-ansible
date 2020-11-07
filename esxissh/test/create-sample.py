@@ -1,9 +1,13 @@
 import sys
 import os
-sys.path.append((os.path.dirname(__file__) or ".") + "/..")
-import esxissh
-
 import configparser
+
+try:
+    sys.path.append((os.path.dirname(__file__) or ".") + "/..")
+    import esxissh
+except ImportError:
+    pass
+
 
 if __name__ == '__main__':
     print("test begin")
