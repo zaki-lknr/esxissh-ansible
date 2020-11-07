@@ -7,6 +7,7 @@ import configparser
 
 if __name__ == '__main__':
     print("test begin")
+    vmname = "zzz-sample"
 
     ini = configparser.SafeConfigParser()
     ini.read('authenticate.conf')
@@ -29,14 +30,14 @@ if __name__ == '__main__':
     media.add('iso', 'cheddar-share/disk2/archive/iso/CentOS-7-x86_64-Minimal-1908.iso')
 
     # vm作成
-    r = esxi.create_vm("z-sample", "WDS100T2B0A", "centos7-64", 2, 2048, nets, disks, media)
-    print("create zzz-sample: " + str(r))
+    r = esxi.create_vm(vmname, "WDS100T2B0A", "centos7-64", 2, 2048, nets, disks, media)
+    print("create " + vmname + ": " + str(r))
 
     print("=== enter to continue ===")
     input()
 
     # 作ったvmの削除
-    r = esxi.delete_vm("z-sample")
-    print("delete zzz-sample: " + str(r))
+    r = esxi.delete_vm(vmname)
+    print("delete " + vmname + ": " + str(r))
 
     esxi.finalize()
