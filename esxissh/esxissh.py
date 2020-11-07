@@ -72,7 +72,12 @@ class EsxiSsh:
         Returns:
             vmid
         """
-        return self.__vmlist[vmname]["vmid"]
+        if self.__vmlist.get(vmname):
+            vmid = self.__vmlist[vmname]["vmid"]
+        else:
+            raise Exception(vmname + ": no such virtual machine")
+
+        return vmid
 
     def get_vmxfile(self, vmname):
         """vmxファイルパス取得
