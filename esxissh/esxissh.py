@@ -162,7 +162,13 @@ class EsxiSsh:
             memory (int): memoryサイズ(MB)
         """
 
-        # todo 同名vmが作れてしまうので、作成処理前にvm作成済み処理を入れる
+        try:
+            # vmidを取得できる -> 同名のVMが既にある
+            self.get_vmid(vmname)
+            return None
+        except:
+            # vmidを取得できるのであれば処理続行
+            pass
 
         vmid = self.__exec_createdummyvm(vmname, datastore)
 
