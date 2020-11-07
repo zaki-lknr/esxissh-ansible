@@ -15,4 +15,5 @@ venv.bak/
 pythonenv*
 
 authenticate.conf
+inventory.ini
 tmp/
