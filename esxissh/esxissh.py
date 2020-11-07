@@ -193,13 +193,7 @@ class EsxiSsh:
 
         """
 
-        stdin, stdout, stderr = self.__client.exec_command('vim-cmd vmsvc/reload ' + vmid)
-        result = stdout.channel.recv_exit_status()
-        stdin.close()
-        stdout.close()
-        stderr.close()
-
-        return result
+        return self.__exec_vimcmd('vmsvc/reload', vmid)
 
     def __exec_createdummyvm(self, vmname, datastore):
         """vm作成
