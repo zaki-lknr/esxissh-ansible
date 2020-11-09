@@ -131,7 +131,7 @@ class EsxiSsh:
             bool: 成功:True / 失敗:False (元々電源onの場合含む)
         """
         vmid = self.get_vmid(vmname)
-        return self.__exec_vimcmd('vmsvc/power.on', vmid)
+        return self.__exec_command('vim-cmd', 'vmsvc/power.on', vmid)
 
     def set_poweroff(self, vmname):
         """vmの電源オフ
@@ -140,7 +140,7 @@ class EsxiSsh:
             bool: 成功:True / 失敗:False (元々電源offの場合含む)
         """
         vmid = self.get_vmid(vmname)
-        return self.__exec_vimcmd('vmsvc/power.off', vmid)
+        return self.__exec_command('vim-cmd', 'vmsvc/power.off', vmid)
 
     def set_shutdown(self, vmname):
         """vmのシャットダウン
@@ -149,7 +149,7 @@ class EsxiSsh:
             bool: 成功:True / 失敗:False (vmware-tools未インストールによる失敗含む)
         """
         vmid = self.get_vmid(vmname)
-        return self.__exec_vimcmd('vmsvc/power.shutdown', vmid)
+        return self.__exec_command('vim-cmd', 'vmsvc/power.shutdown', vmid)
 
     def create_vm(self, vmname, datastore, guestos, vcpus, memory, network=None, disks=None, media=None):
         """vm作成
@@ -204,7 +204,7 @@ class EsxiSsh:
 
         """
 
-        return self.__exec_vimcmd('vmsvc/reload', vmid)
+        return self.__exec_command('vim-cmd', 'vmsvc/reload', vmid)
 
     def __exec_createdummyvm(self, vmname, datastore):
         """vm作成
@@ -361,10 +361,10 @@ class EsxiSsh:
             bool: 成功:True / 失敗:False
         """
         vmid = self.get_vmid(vmname)
-        return self.__exec_vimcmd('vmsvc/destroy', vmid)
+        return self.__exec_command('vim-cmd', 'vmsvc/destroy', vmid)
 
-    def __exec_vimcmd(self, subcommand, args):
-        """vim-cmd 汎用実行
+    def __exec_command(self, command, *args):
+        """コマンド汎用実行
 
         stdoutが不要で戻り値だけ取れればよいコマンド実行用
 
@@ -375,7 +375,7 @@ class EsxiSsh:
             Exception: 戻り値が非0の場合
         """
         result = None
-        stdin, stdout, stderr = self.__client.exec_command("vim-cmd " + subcommand + ' ' + args)
+        stdin, stdout, stderr = self.__client.exec_command(command + ' ' + ' '.join(args))
         if stdout.channel.recv_exit_status() == 0:
             result = True
         else:
