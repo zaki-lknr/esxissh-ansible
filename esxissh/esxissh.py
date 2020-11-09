@@ -243,24 +243,11 @@ class EsxiSsh:
 
     def __updateline(self, file, key, value):
         # 既存行を削除
-        stdin, stdout, stderr = self.__client.exec_command("sed -i -e '/^" + key + " /d' " + file)
-        result = stdout.channel.recv_exit_status()
+        self.__exec_command("sed -i -e '/^" + key + " /d' " + file)
+        # 行追加
+        self.__exec_command("echo '" + key + " = \"" + value + "\"' >> " + file)
 
-        stdin.close()
-        stdout.close()
-        stderr.close()
-
-        if result != 0:
-            return False
-
-        stdin, stdout, stderr = self.__client.exec_command("echo '" + key + " = \"" + value + "\"' >> " + file)
-        result = stdout.channel.recv_exit_status()
-
-        stdin.close()
-        stdout.close()
-        stderr.close()
-
-        return result == 0
+        return
 
     def __set_network(self, network, vmxfile):
         for i in range(network.length()):
@@ -271,57 +258,26 @@ class EsxiSsh:
             network_define += "ethernet{}.present = ".format(str(i)) + '"{}"'.format(str(network.get(i)['present']).upper()) + "\n"
 
             command = "cat  >> " + vmxfile + ' << __EOL__' + "\n" + network_define + "__EOL__\n"
-            # print(command)
-            stdin, stdout, stderr = self.__client.exec_command(command)
-            result = stdout.channel.recv_exit_status()
-
-            stdin.close()
-            stdout.close()
-            stderr.close()
+            self.__exec_command(command)
 
     def __set_storage(self, disks, vmxfile):
         basepath, ext = os.path.splitext(vmxfile)
         vmdkfile = basepath + '.vmdk'
         basedirpath = os.path.dirname(vmxfile)
         # 既存disk削除
-        stdin, stdout, stderr = self.__client.exec_command('vmkfstools --deletevirtualdisk ' + vmdkfile)
-        if stdout.channel.recv_exit_status() == 0:
-            result = True
-        else:
-            result = False
-
-        stdin.close()
-        stdout.close()
-        stderr.close()
+        self.__exec_command('vmkfstools --deletevirtualdisk ' + vmdkfile)
 
         # 既存定義削除
         # 本当は↑で削除したvmdkファイル名に対応したSCSIの番号をちゃんと突き合わせて行削除したい。
         # が、さすがにオーバーキルなのとvm作成直後前提ということでscsi0:0固定で処理
         delete_controller = 'scsi0:0'
-        stdin, stdout, stderr = self.__client.exec_command("sed -i -e '/^" + delete_controller + "/d' " + vmxfile)
-        if stdout.channel.recv_exit_status() == 0:
-            result = True
-        else:
-            result = False
-
-        stdin.close()
-        stdout.close()
-        stderr.close()
-
+        self.__exec_command("sed -i -e '/^" + delete_controller + "/d' " + vmxfile)
         # disk作成
         for i in range(disks.length()):
             disk_size = disks.get(i)['size']
             disk_format = disks.get(i)['diskformat']
             disk_filename = basedirpath + '/' + disks.get(i)['name']
-            stdin, stdout, stderr = self.__client.exec_command('vmkfstools -c ' + str(disk_size) + 'G -d ' + disk_format + ' ' + disk_filename)
-            if stdout.channel.recv_exit_status() == 0:
-                result = True
-            else:
-                result = False
-
-            stdin.close()
-            stdout.close()
-            stderr.close()
+            self.__exec_command('vmkfstools -c ' + str(disk_size) + 'G -d ' + disk_format + ' ' + disk_filename)
 
             # 定義追加
             disk_define = "scsi0:{}.deviceType = ".format(str(i)) + '"scsi-hardDisk"' + "\n"
@@ -329,13 +285,7 @@ class EsxiSsh:
             disk_define += "scsi0:{}.present = ".format(str(i)) + '"TRUE"' + "\n"
 
             command = "cat  >> " + vmxfile + ' << __EOL__' + "\n" + disk_define + "__EOL__\n"
-            # print(command)
-            stdin, stdout, stderr = self.__client.exec_command(command)
-            result = stdout.channel.recv_exit_status()
-
-            stdin.close()
-            stdout.close()
-            stderr.close()
+            self.__exec_command(command)
 
         # SCSIアダプタ設定
         self.__updateline(vmxfile, "scsi0.virtualDev", disks.virtual_device)
@@ -347,12 +297,7 @@ class EsxiSsh:
             media_define += "ide0:{}.present = ".format(str(i)) + '"TRUE"' + "\n"
 
             command = "cat  >> " + vmxfile + ' << __EOL__' + "\n" + media_define + "__EOL__\n"
-            stdin, stdout, stderr = self.__client.exec_command(command)
-            result = stdout.channel.recv_exit_status()
-
-            stdin.close()
-            stdout.close()
-            stderr.close()
+            self.__exec_command(command)
 
     def delete_vm(self, vmname):
         """vm削除
