@@ -369,7 +369,10 @@ class EsxiSsh:
         stdoutが不要で戻り値だけ取れればよいコマンド実行用
 
         Return:
-            bool: 成功:True / 失敗:False
+            bool: 成功:True
+
+        Raises:
+            Exception: 戻り値が非0の場合
         """
         result = None
         stdin, stdout, stderr = self.__client.exec_command("vim-cmd " + subcommand + ' ' + args)
@@ -377,10 +380,18 @@ class EsxiSsh:
             result = True
         else:
             result = False
+            err = ''
+            for line in stdout:
+                err += line #.rstrip()
+            for line in stderr:
+                err += line #.rstrip()
 
         stdin.close()
         stdout.close()
         stderr.close()
+
+        if not result:
+            raise Exception("exec command failed: " + err)
 
         return result
 

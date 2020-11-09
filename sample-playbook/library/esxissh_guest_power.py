@@ -30,17 +30,20 @@ def run_module():
     esxi.initialize()
     poweron = esxi.get_powerstate(module.params['vmname'])
 
-    if (not poweron):
-        if module.params['state'] == 'poweron':
-            if esxi.set_poweron(module.params['vmname']):
-                result['changed']=True
-    else:
-        if module.params['state'] == 'shutdown':
-            if esxi.set_shutdown(module.params['vmname']):
-                result['changed']=True
-        elif module.params['state'] == 'poweroff':
-            if esxi.set_poweroff(module.params['vmname']):
-                result['changed']=True
+    try:
+        if (not poweron):
+            if module.params['state'] == 'poweron':
+                if esxi.set_poweron(module.params['vmname']):
+                    result['changed']=True
+        else:
+            if module.params['state'] == 'shutdown':
+                if esxi.set_shutdown(module.params['vmname']):
+                    result['changed']=True
+            elif module.params['state'] == 'poweroff':
+                if esxi.set_poweroff(module.params['vmname']):
+                    result['changed']=True
+    except Exception as err:
+        module.fail_json(msg=str(err), **result)
 
     module.exit_json(**result)
 
