@@ -160,6 +160,9 @@ class EsxiSsh:
             guestos (str): ゲストOS種別
             vcpus (int): vCPUs数
             memory (int): memoryサイズ(MB)
+
+        Returns:
+            vmid
         """
 
         try:
@@ -173,11 +176,10 @@ class EsxiSsh:
         vmid = self.__exec_createdummyvm(vmname, datastore)
         vmxfile = self.get_vmxfile(vmname)
 
-        result = self.__set_guestos(guestos, vmxfile)
-
-        result = self.__set_vcpus(vcpus, vmxfile)
-
-        result = self.__set_memory(memory, vmxfile)
+        # cpu/memory/guestos設定
+        self.__set_guestos(guestos, vmxfile)
+        self.__set_vcpus(vcpus, vmxfile)
+        self.__set_memory(memory, vmxfile)
 
         if (network != None):
             self.__set_network(network, vmxfile)
@@ -190,7 +192,7 @@ class EsxiSsh:
 
         self.__reload_vm(vmid)
 
-        return result
+        return vmid
 
     def __reload_vm(self, vmid):
         """vm情報のreload
@@ -225,13 +227,13 @@ class EsxiSsh:
         return result
 
     def __set_guestos(self, guestos, vmxfile):
-        return self.__updateline(vmxfile, "guestOS", guestos)
+        self.__updateline(vmxfile, "guestOS", guestos)
 
     def __set_vcpus(self, vcpus, vmxfile):
-        return self.__updateline(vmxfile, "numvcpus", str(vcpus))
+        self.__updateline(vmxfile, "numvcpus", str(vcpus))
 
     def __set_memory(self, memory, vmxfile):
-        return self.__updateline(vmxfile, "memSize", str(memory))
+        self.__updateline(vmxfile, "memSize", str(memory))
 
     def __updateline(self, file, key, value):
         # 既存行を削除
