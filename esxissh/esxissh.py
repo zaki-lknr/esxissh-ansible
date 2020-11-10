@@ -171,6 +171,7 @@ class EsxiSsh:
             pass
 
         vmid = self.__exec_createdummyvm(vmname, datastore)
+        vmxfile = self.get_vmxfile(vmname)
 
         result = self.__set_guestos(vmname, datastore, guestos)
         # print("set guest: " + str(result))
@@ -182,15 +183,12 @@ class EsxiSsh:
         # print("set memory: " + str(result))
 
         if (network != None):
-            vmxfile = self.get_vmxfile(vmname) #'/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
             self.__set_network(network, vmxfile)
 
         if (disks != None):
-            vmxfile = self.get_vmxfile(vmname)
             self.__set_storage(disks, vmxfile)
 
         if (media != None):
-            vmxfile = self.get_vmxfile(vmname)
             self.__set_mediamount(media, vmxfile)
 
         self.__reload_vm(vmid)
