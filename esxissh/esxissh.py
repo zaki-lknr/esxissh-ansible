@@ -173,14 +173,11 @@ class EsxiSsh:
         vmid = self.__exec_createdummyvm(vmname, datastore)
         vmxfile = self.get_vmxfile(vmname)
 
-        result = self.__set_guestos(vmname, datastore, guestos)
-        # print("set guest: " + str(result))
+        result = self.__set_guestos(guestos, vmxfile)
 
-        result = self.__set_vcpus(vmname, datastore, vcpus)
-        # print("set vcpus: " + str(result))
+        result = self.__set_vcpus(vcpus, vmxfile)
 
-        result = self.__set_memory(vmname, datastore, memory)
-        # print("set memory: " + str(result))
+        result = self.__set_memory(memory, vmxfile)
 
         if (network != None):
             self.__set_network(network, vmxfile)
@@ -227,16 +224,13 @@ class EsxiSsh:
 
         return result
 
-    def __set_guestos(self, vmname, datastore, guestos):
-        vmxfile = self.get_vmxfile(vmname)  #'/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
+    def __set_guestos(self, guestos, vmxfile):
         return self.__updateline(vmxfile, "guestOS", guestos)
 
-    def __set_vcpus(self, vmname, datastore, vcpus):
-        vmxfile = self.get_vmxfile(vmname)  #'/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
+    def __set_vcpus(self, vcpus, vmxfile):
         return self.__updateline(vmxfile, "numvcpus", str(vcpus))
 
-    def __set_memory(self, vmname, datastore, memory):
-        vmxfile = self.get_vmxfile(vmname)  #'/vmfs/volumes/' + datastore + '/' + vmname + '/' + vmname + '.vmx'
+    def __set_memory(self, memory, vmxfile):
         return self.__updateline(vmxfile, "memSize", str(memory))
 
     def __updateline(self, file, key, value):
