@@ -255,8 +255,8 @@ class EsxiSsh:
             self.__exec_command(command)
 
     def __set_storage(self, disks, vmxfile):
-        basepath, ext = os.path.splitext(vmxfile)
-        vmdkfile = basepath + '.vmdk'
+        vmxpath = os.path.splitext(vmxfile)
+        vmdkfile = vmxpath[0] + '.vmdk'
         basedirpath = os.path.dirname(vmxfile)
         # 既存disk削除
         self.__exec_command('vmkfstools --deletevirtualdisk ' + vmdkfile)
