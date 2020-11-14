@@ -61,15 +61,23 @@ def run_module():
     media.add(type=cdrom[0]['type'], path=cdrom[0]['iso_path'])
 
     try:
-        create_vm = esxi.create_vm(vmname, datastore, guestid, cpu, ram, nets, disks, media)
-        if create_vm == None:
-            # VMが既に存在する
-            result['changed'] = False
-            result['message'] = vmname + ' is already exsists'
-        else:
-            # VM作成完了
+        if module.params['state'] == 'absent':
+            # VM削除
+            esxi.delete_vm(vmname)
             result['changed'] = True
-            result['message'] = vmname + ' is created (vmid ' + create_vm + ')'
+            result['message'] = vmname + ' is deleted'
+            # 最初からない場合の処理がない(例外になる)
+
+        else:
+            create_vm = esxi.create_vm(vmname, datastore, guestid, cpu, ram, nets, disks, media)
+            if create_vm == None:
+                # VMが既に存在する
+                result['changed'] = False
+                result['message'] = vmname + ' is already exsists'
+            else:
+                # VM作成完了
+                result['changed'] = True
+                result['message'] = vmname + ' is created (vmid ' + create_vm + ')'
 
     except Exception as err:
         module.fail_json(msg=str(err), **result)
