@@ -297,9 +297,14 @@ class EsxiSsh:
         """vm削除
 
         Returns:
-            bool: 成功:True / 失敗:False
+            bool: 成功:True / 対象が無い:None
         """
-        vmid = self.get_vmid(vmname)
+        try:
+            vmid = self.get_vmid(vmname)
+        except:
+            # vmidを取得できない: 対象VMが無い
+            return None
+
         return self.__exec_command('vim-cmd', 'vmsvc/destroy', vmid)
 
     def __exec_command(self, command, *args):

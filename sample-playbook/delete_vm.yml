@@ -1,0 +1,13 @@
+- hosts: localhost
+  gather_facts: no
+
+  tasks:
+  - name: delete vm
+    esxissh_guest:
+      esxiaddress: '{{ esxiaddr }}'
+      esxiusername: '{{ esxiuser }}'
+      esxipassword: '{{ esxipass }}'
+      name: vm-example
+      guest_id: centos7-64  # API使用時と書式違うので注意
+      datastore: WDS100T2B0A
+      state: absent

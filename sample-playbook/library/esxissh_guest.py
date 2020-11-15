@@ -67,12 +67,16 @@ def run_module():
     try:
         if module.params['state'] == 'absent':
             # VM削除
-            esxi.delete_vm(vmname)
-            result['changed'] = True
-            result['message'] = vmname + ' is deleted'
-            # 最初からない場合の処理がない(例外になる)
+            delete_vm = esxi.delete_vm(vmname)
+            if delete_vm == None:
+                # 元から無い場合
+                result['changed'] = False
+            else:
+                result['changed'] = True
+                result['message'] = vmname + ' is deleted'
 
         else:
+            # VM作成
             create_vm = esxi.create_vm(vmname, datastore, guestid, cpu, ram, nets, disks, media)
             if create_vm == None:
                 # VMが既に存在する
