@@ -39,26 +39,30 @@ def run_module():
     esxi.initialize()
 
     vmname = module.params['name']
-    cpu = module.params['hardware']['num_cpus']
-    ram = module.params['hardware']['memory_mb']
     datastore = module.params['datastore']
     guestid = module.params['guest_id']
+    if module.params.get('hardware'):
+        cpu = module.params['hardware']['num_cpus']
+        ram = module.params['hardware']['memory_mb']
 
-    network = module.params['networks']
-    # お試し
     nets = esxissh.EsxiNetwork()
-    nets.add(network_name=network[0]['name'], virtual_dev=network[0]['device_type'])
+    if module.params.get('networks'):
+        network = module.params['networks']
+        # お試し
+        nets.add(network_name=network[0]['name'], virtual_dev=network[0]['device_type'])
 
-    disk = module.params['disk']
-    # お試し
     disks = esxissh.EsxiDisk()
-    # todo: disk名てきとう
-    disks.add(name=vmname+'.vmdk', size=disk[0]['size_gb'], disk_format=disk[0]['type'])
+    if module.params.get('disk'):
+        disk = module.params['disk']
+        # お試し
+        # todo: disk名てきとう
+        disks.add(name=vmname+'.vmdk', size=disk[0]['size_gb'], disk_format=disk[0]['type'])
 
-    cdrom = module.params['cdrom']
-    # お試し
     media = esxissh.EsxiMedia()
-    media.add(type=cdrom[0]['type'], path=cdrom[0]['iso_path'])
+    if module.params.get('cdrom'):
+        cdrom = module.params['cdrom']
+        # お試し
+        media.add(type=cdrom[0]['type'], path=cdrom[0]['iso_path'])
 
     try:
         if module.params['state'] == 'absent':
