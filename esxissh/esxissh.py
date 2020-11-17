@@ -267,15 +267,15 @@ class EsxiSsh:
         delete_controller = 'scsi0:0'
         self.__exec_command("sed -i -e '/^" + delete_controller + "/d' " + vmxfile)
         # disk作成
-        for i in range(disks.length()):
-            disk_size = disks.get(i)['size']
-            disk_format = disks.get(i)['diskformat']
-            disk_filename = basedirpath + '/' + disks.get(i)['name']
+        for i, d in enumerate(disks):
+            disk_size = d['size']
+            disk_format = d['diskformat']
+            disk_filename = basedirpath + '/' + d['name']
             self.__exec_command('vmkfstools -c ' + str(disk_size) + 'G -d ' + disk_format + ' ' + disk_filename)
 
             # 定義追加
             disk_define = "scsi0:{}.deviceType = ".format(str(i)) + '"scsi-hardDisk"' + "\n"
-            disk_define += "scsi0:{}.filename = ".format(str(i)) + '"{}"'.format(disks.get(i)['name']) + "\n"
+            disk_define += "scsi0:{}.filename = ".format(str(i)) + '"{}"'.format(d['name']) + "\n"
             disk_define += "scsi0:{}.present = ".format(str(i)) + '"TRUE"' + "\n"
 
             command = "cat  >> " + vmxfile + ' << __EOL__' + "\n" + disk_define + "__EOL__\n"
@@ -386,6 +386,18 @@ class EsxiDisk:
 
     def get(self, index):
         return self.disk_list[index]
+
+    def __iter__(self):
+        self.__index = 0
+        return self
+
+    def __next__(self):
+        if len(self.disk_list) <= self.__index:
+            raise StopIteration()
+
+        ret = self.disk_list[self.__index]
+        self.__index += 1
+        return ret
 
 class EsxiMedia:
     def __init__(self):
