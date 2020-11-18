@@ -32,6 +32,7 @@ if __name__ == '__main__':
 
     media = esxissh.EsxiMedia()
     media.add('iso', 'cheddar-share/disk2/archive/iso/CentOS-7-x86_64-Minimal-1908.iso')
+    media.add('iso', 'cheddar-share/disk2/archive/iso/CentOS-8.2.2004-x86_64-minimal.iso')
 
     # vm作成
     r = esxi.create_vm(vmname, "WDS100T2B0A", "centos7-64", 2, 2048, nets, disks, media)

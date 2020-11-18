@@ -285,9 +285,9 @@ class EsxiSsh:
         self.__updateline(vmxfile, "scsi0.virtualDev", disks.virtual_device)
 
     def __set_mediamount(self, media, vmxfile):
-        for i in range(media.length()):
+        for i, m in enumerate(media):
             media_define = "ide0:{}.deviceType = ".format(str(i)) + '"cdrom-image"' + "\n"
-            media_define += "ide0:{}.filename = ".format(str(i)) + '"/vmfs/volumes/{}"'.format(media.get(i)['path']) + "\n"
+            media_define += "ide0:{}.filename = ".format(str(i)) + '"/vmfs/volumes/{}"'.format(m['path']) + "\n"
             media_define += "ide0:{}.present = ".format(str(i)) + '"TRUE"' + "\n"
 
             command = "cat  >> " + vmxfile + ' << __EOL__' + "\n" + media_define + "__EOL__\n"
@@ -428,3 +428,15 @@ class EsxiMedia:
 
     def get(self, index):
         return self.media_list[index]
+
+    def __iter__(self):
+        self.__index = 0
+        return self
+
+    def __next__(self):
+        if len(self.media_list) <= self.__index:
+            raise StopIteration()
+
+        ret = self.media_list[self.__index]
+        self.__index += 1
+        return ret
