@@ -47,9 +47,7 @@ def run_module():
 
     nets = esxissh.EsxiNetwork()
     if module.params.get('networks'):
-        network = module.params['networks']
-        # お試し
-        nets.add(network_name=network[0]['name'], virtual_dev=network[0]['device_type'])
+        nets.add_items(module.params['networks'])
 
     disks = esxissh.EsxiDisk()
     if module.params.get('disk'):

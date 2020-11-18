@@ -354,6 +354,10 @@ class EsxiNetwork:
             }
         )
 
+    def add_items(self, items):
+        for item in items:
+            self.add(network_name=item['name'], virtual_dev=item['device_type'])
+
     def length(self):
         return len(self.nic_list)
 

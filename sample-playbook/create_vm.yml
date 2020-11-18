@@ -16,6 +16,8 @@
       networks:
         - name: VM Network
           device_type: vmxnet3
+        - name: private-network-1
+          device_type: vmxnet3
       disk:
         - size_gb: 10
           type: thin
