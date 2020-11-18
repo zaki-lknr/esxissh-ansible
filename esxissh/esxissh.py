@@ -244,12 +244,12 @@ class EsxiSsh:
         return
 
     def __set_network(self, network, vmxfile):
-        for i in range(network.length()):
-            network_define = "ethernet{}.virtualDev = ".format(str(i)) + '"{}"'.format(network.get(i)['virtualDev']) + "\n"
-            network_define += "ethernet{}.networkName = ".format(str(i)) + '"{}"'.format(network.get(i)['networkName']) + "\n"
-            network_define += "ethernet{}.addressType = ".format(str(i)) + '"{}"'.format(network.get(i)['addressType']) + "\n"
-            network_define += "ethernet{}.uptCompatibility = ".format(str(i)) + '"{}"'.format(str(network.get(i)['uptCompatibility']).upper()) + "\n"
-            network_define += "ethernet{}.present = ".format(str(i)) + '"{}"'.format(str(network.get(i)['present']).upper()) + "\n"
+        for i, n in enumerate(network):
+            network_define = "ethernet{}.virtualDev = ".format(str(i)) + '"{}"'.format(n['virtualDev']) + "\n"
+            network_define += "ethernet{}.networkName = ".format(str(i)) + '"{}"'.format(n['networkName']) + "\n"
+            network_define += "ethernet{}.addressType = ".format(str(i)) + '"{}"'.format(n['addressType']) + "\n"
+            network_define += "ethernet{}.uptCompatibility = ".format(str(i)) + '"{}"'.format(str(n['uptCompatibility']).upper()) + "\n"
+            network_define += "ethernet{}.present = ".format(str(i)) + '"{}"'.format(str(n['present']).upper()) + "\n"
 
             command = "cat  >> " + vmxfile + ' << __EOL__' + "\n" + network_define + "__EOL__\n"
             self.__exec_command(command)
@@ -359,6 +359,18 @@ class EsxiNetwork:
 
     def get(self, index):
         return self.nic_list[index]
+
+    def __iter__(self):
+        self.__index = 0
+        return self
+
+    def __next__(self):
+        if len(self.nic_list) <= self.__index:
+            raise StopIteration()
+
+        ret = self.nic_list[self.__index]
+        self.__index += 1
+        return ret
 
 class EsxiDisk:
     def __init__(self, device="pvscsi"):
