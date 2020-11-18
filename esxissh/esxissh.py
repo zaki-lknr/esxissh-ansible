@@ -393,6 +393,13 @@ class EsxiDisk:
             }
         )
 
+    def add_items(self, vmname, items):
+        for index, item in enumerate(items):
+            name = vmname + "_" + str(index) + ".vmdk"
+            size = item['size_gb']
+            format = item['type']
+            self.add(name, size, format)
+
     def length(self):
         return len(self.disk_list)
 

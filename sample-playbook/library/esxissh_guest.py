@@ -53,10 +53,7 @@ def run_module():
 
     disks = esxissh.EsxiDisk()
     if module.params.get('disk'):
-        disk = module.params['disk']
-        # お試し
-        # todo: disk名てきとう
-        disks.add(name=vmname+'.vmdk', size=disk[0]['size_gb'], disk_format=disk[0]['type'])
+        disks.add_items(vmname, module.params['disk'])
 
     media = esxissh.EsxiMedia()
     if module.params.get('cdrom'):

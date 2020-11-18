@@ -19,6 +19,8 @@
       disk:
         - size_gb: 10
           type: thin
+        # - size_gb: 3
+        #   type: eagerzeroedthick
       cdrom:
         - type: iso
           iso_path: cheddar-share/disk2/archive/iso/CentOS-7-x86_64-Minimal-1908.iso
