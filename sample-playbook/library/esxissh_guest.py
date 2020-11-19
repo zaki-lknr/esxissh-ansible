@@ -32,7 +32,6 @@ def run_module():
 
     result = dict(
         changed=False,
-        message=''
     )
 
     esxi = esxissh.EsxiSsh(module.params['esxiaddress'], module.params['esxiusername'], module.params['esxipassword'])
@@ -41,21 +40,28 @@ def run_module():
     vmname = module.params['name']
     datastore = module.params['datastore']
     guestid = module.params['guest_id']
+    result['name'] = vmname
+    result['datastore'] = datastore
+    result['guest_id'] = guestid
     if module.params.get('hardware'):
         cpu = module.params['hardware']['num_cpus']
         ram = module.params['hardware']['memory_mb']
+        result['hardware'] = module.params['hardware']
 
     nets = esxissh.EsxiNetwork()
     if module.params.get('networks'):
         nets.add_items(module.params['networks'])
+        result['networks'] = module.params['networks']
 
     disks = esxissh.EsxiDisk()
     if module.params.get('disk'):
         disks.add_items(vmname, module.params['disk'])
+        result['disk'] = module.params['disk']
 
     media = esxissh.EsxiMedia()
     if module.params.get('cdrom'):
         media.add_items(module.params['cdrom'])
+        result['cdrom'] = module.params['cdrom']
 
     try:
         if module.params['state'] == 'absent':
@@ -65,8 +71,8 @@ def run_module():
                 # 元から無い場合
                 result['changed'] = False
             else:
+                # VM削除完了
                 result['changed'] = True
-                result['message'] = vmname + ' is deleted'
 
         else:
             # VM作成
@@ -74,11 +80,9 @@ def run_module():
             if create_vm == None:
                 # VMが既に存在する
                 result['changed'] = False
-                result['message'] = vmname + ' is already exsists'
             else:
                 # VM作成完了
                 result['changed'] = True
-                result['message'] = vmname + ' is created (vmid ' + create_vm + ')'
 
     except Exception as err:
         module.fail_json(msg=str(err), **result)
