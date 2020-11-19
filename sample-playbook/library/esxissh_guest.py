@@ -55,9 +55,7 @@ def run_module():
 
     media = esxissh.EsxiMedia()
     if module.params.get('cdrom'):
-        cdrom = module.params['cdrom']
-        # お試し
-        media.add(type=cdrom[0]['type'], path=cdrom[0]['iso_path'])
+        media.add_items(module.params['cdrom'])
 
     try:
         if module.params['state'] == 'absent':

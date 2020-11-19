@@ -433,6 +433,9 @@ class EsxiMedia:
                 'path': path
             }
         )
+    def add_items(self, items):
+        for item in items:
+            self.add(item['type'], item['iso_path'])
 
     def length(self):
         return len(self.media_list)

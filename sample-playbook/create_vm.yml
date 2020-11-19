@@ -26,4 +26,6 @@
       cdrom:
         - type: iso
           iso_path: cheddar-share/disk2/archive/iso/CentOS-7-x86_64-Minimal-1908.iso
+        - type: iso
+          iso_path: cheddar-share/disk2/archive/iso/CentOS-8.2.2004-x86_64-minimal.iso
       state: present
