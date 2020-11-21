@@ -371,12 +371,6 @@ class EsxiNetwork(EsxiDevices):
         for item in items:
             self.add(network_name=item['name'], virtual_dev=item['device_type'])
 
-    def length(self):
-        return len(self.item_list)
-
-    def get(self, index):
-        return self.item_list[index]
-
 class EsxiDisk(EsxiDevices):
     def __init__(self, device="pvscsi"):
         self.item_list = []
@@ -405,12 +399,6 @@ class EsxiDisk(EsxiDevices):
             format = item['type']
             self.add(name, size, format)
 
-    def length(self):
-        return len(self.item_list)
-
-    def get(self, index):
-        return self.item_list[index]
-
 class EsxiMedia(EsxiDevices):
     def __init__(self):
         self.item_list = []
@@ -425,9 +413,3 @@ class EsxiMedia(EsxiDevices):
     def add_items(self, items):
         for item in items:
             self.add(item['type'], item['iso_path'])
-
-    def length(self):
-        return len(self.item_list)
-
-    def get(self, index):
-        return self.item_list[index]

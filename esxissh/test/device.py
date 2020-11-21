@@ -18,15 +18,15 @@ if __name__ == '__main__':
     nets = esxissh.EsxiNetwork()
     nets.add("VM Network")
     nets.add("private-network-1")
-    print(nets.length())
+    # print(nets.length())
 
     # print(nets.get(0))
     # print(nets.get(1))
 
-    for i in range(nets.length()):
+    for i,dev in enumerate(nets):
         print("index: " + str(i))
-        print(nets.get(i))
-        network_define = "ethernet{}.virtualDev = ".format(str(i)) + '"{}"'.format(nets.get(i)['virtualDev'])
+        print(dev)
+        network_define = "ethernet{}.virtualDev = ".format(str(i)) + '"{}"'.format(dev['virtualDev'])
         print(network_define)
 
     print("---- disk ----")
@@ -36,15 +36,15 @@ if __name__ == '__main__':
     print(disks)
     print(disks.virtual_device)
 
-    for i in range(disks.length()):
+    for i,dev in enumerate(disks):
         print("index: " + str(i))
-        print(disks.get(i))
+        print(dev)
 
     print("---- media(cd/dvd) ----")
     media = esxissh.EsxiMedia()
     media.add('iso', 'cheddar-share/disk2/archive/iso/CentOS-7-x86_64-Minimal-1908.iso')
     print(media)
 
-    for i in range(media.length()):
+    for i,dev in enumerate(media):
         print("index: " + str(i))
-        print(media.get(i))
+        print(dev)
