@@ -11,7 +11,7 @@ class EsxiSsh:
         __username (str): ssh username 
         __password (str): ssh password
         __esxiaddr (str): ESXi ipaddr
-        __vmlist (obj): result of 'vim-cmd vmsvc/getallvms'
+        __vmlist (dict): result of 'vim-cmd vmsvc/getallvms'
         __client (obj): ssh connection of paramiko
     """
 
