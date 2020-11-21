@@ -339,12 +339,25 @@ class EsxiSsh:
 
         return result
 
-class EsxiNetwork:
+class EsxiDevices:
+    def __iter__(self):
+        self.__index = 0
+        return self
+
+    def __next__(self):
+        if len(self.item_list) <= self.__index:
+            raise StopIteration()
+
+        ret = self.item_list[self.__index]
+        self.__index += 1
+        return ret
+
+class EsxiNetwork(EsxiDevices):
     def __init__(self):
-        self.nic_list = []
+        self.item_list = []
 
     def add(self, network_name, virtual_dev='vmxnet3', address_type="generated", upt_compatibility=True, present=True):
-        self.nic_list.append(
+        self.item_list.append(
             {
                 'virtualDev': virtual_dev,
                 'networkName': network_name,
@@ -359,26 +372,14 @@ class EsxiNetwork:
             self.add(network_name=item['name'], virtual_dev=item['device_type'])
 
     def length(self):
-        return len(self.nic_list)
+        return len(self.item_list)
 
     def get(self, index):
-        return self.nic_list[index]
+        return self.item_list[index]
 
-    def __iter__(self):
-        self.__index = 0
-        return self
-
-    def __next__(self):
-        if len(self.nic_list) <= self.__index:
-            raise StopIteration()
-
-        ret = self.nic_list[self.__index]
-        self.__index += 1
-        return ret
-
-class EsxiDisk:
+class EsxiDisk(EsxiDevices):
     def __init__(self, device="pvscsi"):
-        self.disk_list = []
+        self.item_list = []
         self.__virtual_dev = device
 
     @property
@@ -389,7 +390,7 @@ class EsxiDisk:
         self.__virtual_dev = device
 
     def add(self, name, size, disk_format='thin'):
-        self.disk_list.append(
+        self.item_list.append(
             {
                 'name': name,
                 'size': size,
@@ -405,29 +406,17 @@ class EsxiDisk:
             self.add(name, size, format)
 
     def length(self):
-        return len(self.disk_list)
+        return len(self.item_list)
 
     def get(self, index):
-        return self.disk_list[index]
+        return self.item_list[index]
 
-    def __iter__(self):
-        self.__index = 0
-        return self
-
-    def __next__(self):
-        if len(self.disk_list) <= self.__index:
-            raise StopIteration()
-
-        ret = self.disk_list[self.__index]
-        self.__index += 1
-        return ret
-
-class EsxiMedia:
+class EsxiMedia(EsxiDevices):
     def __init__(self):
-        self.media_list = []
+        self.item_list = []
 
     def add(self, type, path):
-        self.media_list.append(
+        self.item_list.append(
             {
                 'type': type,
                 'path': path
@@ -438,19 +427,7 @@ class EsxiMedia:
             self.add(item['type'], item['iso_path'])
 
     def length(self):
-        return len(self.media_list)
+        return len(self.item_list)
 
     def get(self, index):
-        return self.media_list[index]
-
-    def __iter__(self):
-        self.__index = 0
-        return self
-
-    def __next__(self):
-        if len(self.media_list) <= self.__index:
-            raise StopIteration()
-
-        ret = self.media_list[self.__index]
-        self.__index += 1
-        return ret
+        return self.item_list[index]
