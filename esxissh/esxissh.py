@@ -340,6 +340,9 @@ class EsxiSsh:
         return result
 
 class EsxiDevices:
+    def __init__(self):
+        self.item_list = []
+
     def __iter__(self):
         self.__index = 0
         return self
@@ -353,8 +356,6 @@ class EsxiDevices:
         return ret
 
 class EsxiNetwork(EsxiDevices):
-    def __init__(self):
-        self.item_list = []
 
     def add(self, network_name, virtual_dev='vmxnet3', address_type="generated", upt_compatibility=True, present=True):
         self.item_list.append(
@@ -400,9 +401,6 @@ class EsxiDisk(EsxiDevices):
             self.add(name, size, format)
 
 class EsxiMedia(EsxiDevices):
-    def __init__(self):
-        self.item_list = []
-
     def add(self, type, path):
         self.item_list.append(
             {
