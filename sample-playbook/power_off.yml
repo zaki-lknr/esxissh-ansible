@@ -7,6 +7,6 @@
       esxiaddress: '{{ esxiaddr }}'
       esxiusername: '{{ esxiuser }}'
       esxipassword: '{{ esxipass }}'
-      vmname: test.vm
+      vmname: vm-example
       # state: poweroff
       state: shutdown
