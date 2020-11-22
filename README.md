@@ -12,3 +12,7 @@ sshを有効にしたESXiに接続してゲストOSを操作する
 ## Samples
 
 at [sample-playbook](sample-playbook) directory
+
+## License
+
+[MIT](https://opensource.org/licenses/MIT)
