@@ -1,9 +1,10 @@
 from ansible.module_utils.basic import AnsibleModule
-#import esxissh  # require "pip install esxissh"
+HAS_ESXISSH_MODULE = False
 try:
     from ansible.module_utils import esxissh
-except ImportError:
-    pass
+    HAS_ESXISSH_MODULE = True
+except ImportError as e:
+    import_error = e
 
 def run_module():
 
@@ -93,4 +94,6 @@ def main():
     run_module()
 
 if __name__ == '__main__':
+    if not HAS_ESXISSH_MODULE:
+        raise ImportError(import_error)
     main()
