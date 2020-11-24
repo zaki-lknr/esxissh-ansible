@@ -1,6 +1,7 @@
 # ESXi-sshd Ansible Modules
 
-sshを有効にしたESXiに接続してゲストOSを操作する
+sshを有効にしたESXiに接続してゲストOSを操作する。
+ssh接続したESXiホスト上で`vim-cmd`コマンド等でVM操作を行うので、無償ライセンスでも利用可能。
 
 ## Requirements
 
