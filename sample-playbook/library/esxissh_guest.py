@@ -1,3 +1,134 @@
+DOCUMENTATION = r'''
+---
+module: esxissh_guest
+
+short_description: 
+
+description:
+- This module can be used to create new virtual machines, remove a virtual machine.
+
+author:
+- zaki (@zaki-lknr)
+
+requirements:
+- python >= 3.6
+- Paramiko >= 2.7
+- enable SSH on ESXi
+
+options:
+  esxiaddress:
+    description:
+    - The hostname or IP address of SSH on ESXi server
+    type: str
+  esxiusername:
+    description:
+    - The username of SSH on ESXi server
+    type: str
+  esxipassword:
+    description:
+    - The password of SSH on ESXi server
+    type: str
+  name:
+    description:
+    - name of the virtual machine to work with.
+    type: str
+  guest_id:
+    description:
+    - Set the guest ID.
+    type: str
+  datastore:
+    description:
+    - Specify datastore or datastore cluster to provision virtual machine.
+    type: str
+  hardware:
+    description:
+    - Manage virtual machine's hardware attributes.
+    type: dict
+    suboptions:
+      memory_mb:
+        type: int
+        description: Amount of memory in MB.
+      num_cpus:
+        type: int
+        description: Number of CPUs.
+  networks:
+    description: A list of networks configurations.
+    type: list
+    elements: dict
+    suboptions:
+      name:
+        type: str
+        description: Name of tye portgroup or distributed virtual portgroup for this interface.
+      device_type:
+        type: str
+        description: Virtual network device.
+  disk:
+    description: A list of disks to add.
+    type: list
+    elements: dict
+    suboptions:
+      type:
+        type: str
+        description: Type of disk.
+      size_gb:
+        type: int
+        description: Disk storage size in gb.
+  cdrom:
+    description: A list of CD-ROM configurations for the virtual machine
+    type: list
+    elements: dict
+    suboptions:
+      type:
+        type: str
+        description: The type of CD-ROM.
+      iso_path:
+        type: str
+        description: The datastore path to the ISO file to use
+  state:
+    description: Set the state of the virtual machine.
+    elements: str
+'''
+
+EXAMPLES = r'''
+  - name: create a new virtual machine
+    esxissh_guest:
+      esxiaddress: '{{ esxiaddr }}'
+      esxiusername: '{{ esxiuser }}'
+      esxipassword: '{{ esxipass }}'
+      name: mv-virtual-machine
+      guest_id: centos7-64
+      datastore: datastore1
+      hardware:
+        memory_mb: 4096
+        num_cpus: 2
+      networks:
+        - name: VM Network
+          device_type: vmxnet3
+        - name: private-network-1
+          device_type: vmxnet3
+      disk:
+        - size_gb: 60
+          type: thin
+        - size_gb: 20
+          type: eagerzeroedthick
+      cdrom:
+        - type: iso
+          iso_path: nfsserv/path/to/iso/CentOS-7-x86_64-Minimal-1908.iso
+        - type: iso
+          iso_path: nfsserv/path/to/iso/CentOS-8.2.2004-x86_64-minimal.iso
+      state: present
+
+  - name: remove a virtual machine
+    esxissh_guest:
+      esxiaddress: '{{ esxiaddr }}'
+      esxiusername: '{{ esxiuser }}'
+      esxipassword: '{{ esxipass }}'
+      name: mv-virtual-machine
+      guest_id: centos7-64
+      datastore: datastore1
+      state: absent
+'''
+
 from ansible.module_utils.basic import AnsibleModule
 HAS_ESXISSH_MODULE = False
 try:
