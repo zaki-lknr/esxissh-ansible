@@ -3,7 +3,7 @@
 
   tasks:
   - name: create vm
-    esxissh_guest:
+    zaki_lknr.esxissh.esxissh_guest:
       esxiaddress: '{{ esxiaddr }}'
       esxiusername: '{{ esxiuser }}'
       esxipassword: '{{ esxipass }}'

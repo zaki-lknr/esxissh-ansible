@@ -3,7 +3,7 @@
 
   tasks:
   - name: power_off
-    esxissh_guest_power:
+    zaki_lknr.esxissh.esxissh_guest_power:
       esxiaddress: '{{ esxiaddr }}'
       esxiusername: '{{ esxiuser }}'
       esxipassword: '{{ esxipass }}'

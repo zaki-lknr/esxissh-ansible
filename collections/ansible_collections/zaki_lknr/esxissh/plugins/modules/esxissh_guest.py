@@ -132,7 +132,7 @@ EXAMPLES = r'''
 from ansible.module_utils.basic import AnsibleModule
 HAS_ESXISSH_MODULE = False
 try:
-    from ansible.module_utils import esxissh
+    from ansible_collections.zaki_lknr.esxissh.plugins.module_utils import esxissh
     HAS_ESXISSH_MODULE = True
 except ImportError as e:
     import_error = e
