@@ -1,7 +1,7 @@
-# ESXi-sshd Ansible Modules
+# Ansible Collection - zaki_lknr.esxissh
 
-sshを有効にしたESXiに接続してゲストOSを操作する。
-ssh接続したESXiホスト上で`vim-cmd`コマンド等でVM操作を行うので、無償ライセンスでも利用可能。
+This collection is used to operate vittual machine on ESXi with enabled SSH.
+Since it uses the `vim-cmd` command, it can also be used with a free license.
 
 ## Requirements
 
@@ -12,8 +12,6 @@ ssh接続したESXiホスト上で`vim-cmd`コマンド等でVM操作を行う�
 - enable SSH on ESXi
 
 ## Samples
-
-at [sample-playbook](sample-playbook) directory
 
 ```yaml
 - hosts: localhost
