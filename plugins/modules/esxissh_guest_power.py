@@ -91,14 +91,13 @@ def run_module():
 
     result = dict(
         changed=False,
-        message=''
     )
 
     esxi = esxissh.EsxiSsh(module.params['esxiaddress'], module.params['esxiusername'], module.params['esxipassword'])
     esxi.initialize()
-    poweron = esxi.get_powerstate(module.params['vmname'])
 
     try:
+        poweron = esxi.get_powerstate(module.params['vmname'])
         if (not poweron):
             if module.params['state'] == 'poweron':
                 if esxi.set_poweron(module.params['vmname']):
