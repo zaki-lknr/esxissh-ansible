@@ -1,3 +1,70 @@
+DOCUMENTATION = r'''
+---
+module: esxissh_guest_power
+
+short_description: Manages power states of VM in ESXi(enable-ssh)
+
+description:
+- Power on / off / shutdown (require vmware-tools) a virtual machine.
+
+author:
+- zaki (@zaki-lknr)
+
+requirements:
+- python >= 3.6
+- Paramiko >= 2.7
+- enable SSH on ESXi
+
+options:
+  esxiaddress:
+    description:
+    - The hostname or IP address of SSH on ESXi server
+    type: str
+  esxiusername:
+    description:
+    - The username of SSH on ESXi server
+    type: str
+  esxipassword:
+    description:
+    - The password of SSH on ESXi server
+    type: str
+  vmname:
+    description:
+    - name of the virtual machine to work with.
+    type: str
+  state:
+    description:
+    - Set the state of the virtual machine.
+    default: poweron
+    type: str
+'''
+
+EXAMPLES = r'''
+- name: Set the state of a VM to poweron
+  esxissh_guest_power:
+    esxiaddress: '{{ esxi_hostaddr }}'
+    esxiusername: '{{ esxi_sshuser }}'
+    esxipassword: '{{ esxi_sshpass }}'
+    vmname: mv-virtual-machine
+    state: poweron
+
+- name: Set the state of a VM to shutdown (require vmware-tools)
+  esxissh_guest_power:
+    esxiaddress: '{{ esxi_hostaddr }}'
+    esxiusername: '{{ esxi_sshuser }}'
+    esxipassword: '{{ esxi_sshpass }}'
+    vmname: mv-virtual-machine
+    state: shutdown
+
+- name: Set the state of a VM to poweroff
+  esxissh_guest_power:
+    esxiaddress: '{{ esxi_hostaddr }}'
+    esxiusername: '{{ esxi_sshuser }}'
+    esxipassword: '{{ esxi_sshpass }}'
+    vmname: mv-virtual-machine
+    state: poweroff
+'''
+
 from ansible.module_utils.basic import AnsibleModule
 HAS_ESXISSH_MODULE = False
 try:
