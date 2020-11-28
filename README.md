@@ -1,7 +1,7 @@
 # Ansible Collection - zaki_lknr.esxissh
 
-This collection is used to operate vittual machine on ESXi with enabled SSH.
-Since it uses the `vim-cmd` command, it can also be used with a free license.
+This collection is used to operate vittual machine on ESXi with enabled SSH.  
+Since it uses the `vim-cmd` command, it can also be used with a any license.
 
 ## Requirements
 
