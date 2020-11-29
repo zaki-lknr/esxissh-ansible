@@ -186,7 +186,7 @@ class EsxiSsh:
             self.__set_network(network, vmid)
 
         if (disks != None):
-            self.__set_storage(disks, vmxfile)
+            self.__set_storage(disks, vmxfile, vmid)
 
         if (media != None):
             self.__set_mediamount(media, vmxfile)
@@ -257,7 +257,7 @@ class EsxiSsh:
         for n in network:
             self.__exec_command('vim-cmd vmsvc/devices.createnic ' + vmid + ' "' + n['virtualDev'] + '"' + ' "' + n['networkName'] +'"')
 
-    def __set_storage(self, disks, vmxfile):
+    def __set_storage(self, disks, vmxfile, vmid):
         vmxpath = os.path.splitext(vmxfile)
         vmdkfile = vmxpath[0] + '.vmdk'
         basedirpath = os.path.dirname(vmxfile)
@@ -267,8 +267,9 @@ class EsxiSsh:
         # 既存定義削除
         # 本当は↑で削除したvmdkファイル名に対応したSCSIの番号をちゃんと突き合わせて行削除したい。
         # が、さすがにオーバーキルなのとvm作成直後前提ということでscsi0:0固定で処理
-        delete_controller = 'scsi0:0'
-        self.__exec_command("sed -i -e '/^" + delete_controller + "/d' " + vmxfile)
+        basefilepath = os.path.basename(vmxfile)
+        self.__exec_command('vim-cmd vmsvc/device.diskremove ' + vmid + ' 0 0 ' +basefilepath)
+
         # disk作成
         for i, d in enumerate(disks):
             disk_size = d['size']
