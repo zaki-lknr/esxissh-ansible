@@ -234,6 +234,8 @@ class EsxiSsh:
         guestos = re.sub(r'(?<!-)64', r'-64', guestos)
         # 3. _を削る
         guestos = re.sub(r'_', r'', guestos)
+        # windows[0-9]serverをsrvに補正
+        guestos = re.sub(r'windows([0-9]+)Server', r'windows\1srv', guestos, flags=re.I)
         self.__updateline(vmxfile, "guestOS", guestos)
 
     def __set_vcpus(self, vcpus, vmxfile):
