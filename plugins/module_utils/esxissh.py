@@ -180,6 +180,7 @@ class EsxiSsh:
         self.__set_guestos(guestos, vmxfile)
         self.__set_vcpus(vcpus, vmxfile)
         self.__set_memory(memory, vmxfile)
+        self.__reload_vm(vmid)
 
         if (network != None):
             self.__set_network(network, vmid)
