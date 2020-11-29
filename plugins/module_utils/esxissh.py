@@ -180,9 +180,10 @@ class EsxiSsh:
         self.__set_guestos(guestos, vmxfile)
         self.__set_vcpus(vcpus, vmxfile)
         self.__set_memory(memory, vmxfile)
+        self.__reload_vm(vmid)
 
         if (network != None):
-            self.__set_network(network, vmxfile)
+            self.__set_network(network, vmid)
 
         if (disks != None):
             self.__set_storage(disks, vmxfile)
@@ -252,16 +253,9 @@ class EsxiSsh:
 
         return
 
-    def __set_network(self, network, vmxfile):
-        for i, n in enumerate(network):
-            network_define = "ethernet{}.virtualDev = ".format(str(i)) + '"{}"'.format(n['virtualDev']) + "\n"
-            network_define += "ethernet{}.networkName = ".format(str(i)) + '"{}"'.format(n['networkName']) + "\n"
-            network_define += "ethernet{}.addressType = ".format(str(i)) + '"{}"'.format(n['addressType']) + "\n"
-            network_define += "ethernet{}.uptCompatibility = ".format(str(i)) + '"{}"'.format(str(n['uptCompatibility']).upper()) + "\n"
-            network_define += "ethernet{}.present = ".format(str(i)) + '"{}"'.format(str(n['present']).upper()) + "\n"
-
-            command = "cat  >> " + vmxfile + ' << __EOL__' + "\n" + network_define + "__EOL__\n"
-            self.__exec_command(command)
+    def __set_network(self, network, vmid):
+        for n in network:
+            self.__exec_command('vim-cmd vmsvc/devices.createnic ' + vmid + ' "' + n['virtualDev'] + '"' + ' "' + n['networkName'] +'"')
 
     def __set_storage(self, disks, vmxfile):
         vmxpath = os.path.splitext(vmxfile)
