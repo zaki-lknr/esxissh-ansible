@@ -8,7 +8,7 @@
       esxiusername: '{{ esxiuser }}'
       esxipassword: '{{ esxipass }}'
       name: vm-example
-      guest_id: centos7-64  # API使用時と書式違うので注意
+      guest_id: centos7_64Guest
       datastore: WDS100T2B0A
       hardware:
         memory_mb: 4096
