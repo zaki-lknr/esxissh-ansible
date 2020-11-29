@@ -278,12 +278,7 @@ class EsxiSsh:
             self.__exec_command('vmkfstools -c ' + str(disk_size) + 'G -d ' + disk_format + ' ' + disk_filename)
 
             # 定義追加
-            disk_define = "scsi0:{}.deviceType = ".format(str(i)) + '"scsi-hardDisk"' + "\n"
-            disk_define += "scsi0:{}.filename = ".format(str(i)) + '"{}"'.format(d['name']) + "\n"
-            disk_define += "scsi0:{}.present = ".format(str(i)) + '"TRUE"' + "\n"
-
-            command = "cat  >> " + vmxfile + ' << __EOL__' + "\n" + disk_define + "__EOL__\n"
-            self.__exec_command(command)
+            self.__exec_command('vim-cmd vmsvc/device.diskaddexisting ' + vmid + ' ' + disk_filename + ' 0 ' + str(i))
 
         # SCSIアダプタ設定
         self.__updateline(vmxfile, "scsi0.virtualDev", disks.virtual_device)
