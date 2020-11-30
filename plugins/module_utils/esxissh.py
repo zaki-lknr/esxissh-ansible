@@ -281,8 +281,7 @@ class EsxiSsh:
             self.__exec_command('vim-cmd vmsvc/device.diskaddexisting ' + vmid + ' ' + disk_filename + ' 0 ' + str(i))
 
         # SCSIアダプタ設定
-        ## デフォルトはlsilogic(LSI Logic)になっているが、web画面から作るとpvscsi(VMware 準仮想化 SCSI)になるので合わせる
-        self.__exec_command('vim-cmd vmsvc/device.ctlradd ' + vmid + ' PvSCSI 0')
+        self.__exec_command('vim-cmd vmsvc/device.ctlradd ' + vmid + ' ' + disks.virtual_device + ' 0')
 
 
     def __set_mediamount(self, media, vmxfile):
