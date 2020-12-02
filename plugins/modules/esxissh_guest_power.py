@@ -2,7 +2,7 @@ DOCUMENTATION = r'''
 ---
 module: esxissh_guest_power
 
-short_description: Manages power states of VM in ESXi(enable-ssh)
+short_description: Manages power states of VM in ESXi with enable SSH
 
 description:
 - Power on / off / shutdown (require vmware-tools) a virtual machine.
