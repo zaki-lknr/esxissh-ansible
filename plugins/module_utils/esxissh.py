@@ -27,6 +27,7 @@ class EsxiSsh:
         # print("user: " + self.__username)
         self.__client = paramiko.SSHClient()
         self.__client.load_system_host_keys()
+        self.__client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         self.__client.connect(self.__esxiaddr, username=self.__username, password=self.__password)
 
     def __get_vm_list(self):
