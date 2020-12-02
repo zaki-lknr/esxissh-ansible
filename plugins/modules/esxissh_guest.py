@@ -2,7 +2,7 @@ DOCUMENTATION = r'''
 ---
 module: esxissh_guest
 
-short_description: 
+short_description: Manages virtual machines in ESXi with enable SSH
 
 description:
 - This module can be used to create new virtual machines, remove a virtual machine.
