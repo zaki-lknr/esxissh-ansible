@@ -11,6 +11,18 @@ Since it uses the `vim-cmd` command, it can also be used with a any license.
 - ESXi 6.5, 6.7 (newer version is not tested)
 - enable SSH on ESXi
 
+
+## Included content
+
+<!--start collection content-->
+### Modules
+Name | Description
+--- | ---
+[zaki_lknr.esxissh.esxissh_guest](https://github.com/zaki-lknr/esxissh-ansible/blob/main/docs/zaki_lknr.esxissh.esxissh_guest_module.rst)|Manages virtual machines in ESXi with enable SSH
+[zaki_lknr.esxissh.esxissh_guest_power](https://github.com/zaki-lknr/esxissh-ansible/blob/main/docs/zaki_lknr.esxissh.esxissh_guest_power_module.rst)|Manages power states of VM in ESXi with enable SSH
+
+<!--end collection content-->
+
 ## Samples
 
 ```yaml
